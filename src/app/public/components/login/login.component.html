@@ -1,1 +1,70 @@
-<p>login works!</p>
+<div class="flex justify-around h-screen items-center">
+  <div class="w-[40%]">
+    <mat-card class="flex-row justify-center">
+      <mat-card-title class="text-center pb-5">Login</mat-card-title>
+
+      <mat-card-content class="ml-auto border-none drop-shadow-none">
+        <form
+          class="example-form w-80 m-auto"
+          [formGroup]="loginForms"
+          (ngSubmit)="loginUser()"
+        >
+          <mat-form-field class="example-full-width w-full" appearance="fill">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              placeholder="Email"
+              type="email"
+              name="email"
+              formControlName="email"
+            />
+            <mat-error
+              *ngIf="loginForms.controls.email.touched && loginForms.controls.email.hasError('required')"
+              >Email is required</mat-error
+            >
+            <mat-error
+              *ngIf="loginForms.controls.email.touched && loginForms.controls.email.hasError('email')"
+              >Email must be valid</mat-error
+            >
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width w-full" appearance="fill">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              placeholder="Password"
+              type="password"
+              name="password"
+              formControlName="password"
+            />
+            <mat-error
+              *ngIf="loginForms.controls.password.touched && loginForms.controls.password.hasError('required')"
+              >Password is required</mat-error
+            >
+          </mat-form-field>
+
+          <div class="flex justify-evenly">
+            <button
+              mat-raised-button
+              type="submit"
+              class="bg-green-600 text-slate-100"
+              [disabled]="!loginForms.valid"
+            >
+              Login
+            </button>
+            <button
+              mat-raised-button
+              class="bg-blue-500 text-slate-100 hover:shadow-lg shadow-cyan-500/50"
+              [routerLink]="['../register']"
+            >
+              Go to Register
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="">
+    <img [src]="imageBgUrl" alt="" class="h-[80vh]" />
+  </div>
+</div>
