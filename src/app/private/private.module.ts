@@ -1,17 +1,18 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
 
-import { PrivateRoutingModule } from './private-routing.module';
-import { DashboardComponent } from './dashboard/dashboard.component';
-
+import { MaterialModule } from "../Material-Module";
+import { DashboardComponent } from "./dashboard/dashboard.component";
+import { PrivateRoutingModule } from "./private-routing.module";
 
 @NgModule({
-  declarations: [
-    DashboardComponent
-  ],
+  declarations: [DashboardComponent],
   imports: [
     CommonModule,
-    PrivateRoutingModule
-  ]
+    PrivateRoutingModule,
+    MaterialModule,
+    ReactiveFormsModule,
+  ],
 })
-export class PrivateModule { }
+export class PrivateModule {}
