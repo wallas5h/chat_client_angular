@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
-import { MaterialModule } from "../Material-Module";
+import { MaterialModule } from "../../Material-Module";
 
 @Component({
   selector: "app-chat",
