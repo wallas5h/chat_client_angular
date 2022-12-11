@@ -10,6 +10,12 @@ const routes: Routes = [
       import("./private/private.module").then((opt) => opt.PrivateModule),
   },
   {
+    path: "chat",
+    // canActivate: [AuthGuard],
+    loadComponent: () =>
+      import("./chat/chat.component").then((opt) => opt.ChatComponent),
+  },
+  {
     path: "public",
     loadChildren: () =>
       import("./public/public.module").then((opt) => opt.PublicModule),
