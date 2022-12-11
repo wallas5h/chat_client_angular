@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import {
   ActivatedRouteSnapshot,
   CanActivate,
@@ -7,12 +8,17 @@ import {
   UrlTree,
 } from "@angular/router";
 import { Observable } from "rxjs";
+import { AuthService } from "../services/auth.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthGuard implements CanActivate {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private _snackBar: MatSnackBar
+  ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -22,6 +28,9 @@ export class AuthGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
+    if (!this.authService.isAuthenticated) {
+      this._snackBar.open("Login first", "Ok", { duration: 3000 });
+    }
     this.router.navigate([""]);
     return false;
   }
