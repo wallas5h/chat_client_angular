@@ -1,0 +1,24 @@
+<div class="flex items-center justify-between w-screen bg-slate-300 py-2 px-4">
+  <span class="cursor-pointer px-2" [routerLink]="['/chat']">ChatMe</span>
+  <span class="example-spacer"></span>
+
+  <ng-container *ngIf="isAuthenticated">
+    <button mat-button [matMenuTriggerFor]="menu">
+      <mat-icon>expand_more</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>Chat</button>
+      <button mat-menu-item>Logout</button>
+    </mat-menu>
+  </ng-container>
+
+  <ng-container *ngIf="!isAuthenticated">
+    <button mat-button [matMenuTriggerFor]="menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item [routerLink]="['../register']">Sign up</button>
+      <button mat-menu-item [routerLink]="['../login']">Login</button>
+    </mat-menu>
+  </ng-container>
+</div>
