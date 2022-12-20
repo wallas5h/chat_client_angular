@@ -16,13 +16,20 @@ const routes: Routes = [
       import("./pages/chat/chat.component").then((opt) => opt.ChatComponent),
   },
   {
-    path: "public",
-    loadChildren: () =>
-      import("./public/public.module").then((opt) => opt.PublicModule),
+    path: "login",
+    loadComponent: () =>
+      import("./pages/login/login.component").then((opt) => opt.LoginComponent),
+  },
+  {
+    path: "register",
+    loadComponent: () =>
+      import("./pages/register/register.component").then(
+        (opt) => opt.RegisterComponent
+      ),
   },
   {
     path: "**",
-    redirectTo: "public",
+    redirectTo: "login",
     pathMatch: "full",
   },
 ];
