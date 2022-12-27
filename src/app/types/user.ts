@@ -5,11 +5,19 @@ export interface loginUserDto {
 
 export interface registerUserDto extends loginUserDto {
   image: string | null;
-  username: string;
+  name: string;
 }
 
 export enum authEndpoints {
   signup = "signup",
   login = "login",
   logout = "logout",
+}
+
+export interface UserEntity {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+  newMessages?: string;
 }
