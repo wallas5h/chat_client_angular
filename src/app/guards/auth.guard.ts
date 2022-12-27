@@ -29,9 +29,12 @@ export class AuthGuard implements CanActivate {
     | boolean
     | UrlTree {
     if (!this.authService.isAuthenticated) {
+      this.router.navigate(["/login"]);
       this._snackBar.open("Login first", "Ok", { duration: 3000 });
+
+      return false;
+    } else {
+      return true;
     }
-    this.router.navigate([""]);
-    return false;
   }
 }
