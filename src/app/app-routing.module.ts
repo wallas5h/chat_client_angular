@@ -1,8 +1,13 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "./guards/auth.guard";
+import { HomeComponent } from "./pages/home/home.component";
 
 const routes: Routes = [
+  {
+    path: "",
+    component: HomeComponent,
+  },
   {
     path: "private",
     canActivate: [AuthGuard],
@@ -11,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: "chat",
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     loadComponent: () =>
       import("./pages/chat/chat.component").then((opt) => opt.ChatComponent),
   },
