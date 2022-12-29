@@ -56,7 +56,7 @@ export class RegisterComponent implements OnInit {
 
     if (this.registerForms.valid && this.isPasswordMatch) {
       await this.authService.register({
-        username: String(this.registerForms.value.username),
+        name: String(this.registerForms.value.username),
         email: String(this.registerForms.value.email),
         password: String(this.registerForms.value.password),
         image: this.uploadImageUrl,
