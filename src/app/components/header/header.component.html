@@ -1,24 +1,33 @@
 <div class="flex items-center justify-between w-screen bg-slate-300 py-2 px-4">
-  <span class="cursor-pointer px-2" [routerLink]="['/chat']">ChatMe</span>
+  <span class="cursor-pointer px-2" [routerLink]="['/']">ChatMe</span>
   <span class="example-spacer"></span>
+  <div class="flex row-auto items-center justify-between">
+    <ng-container *ngIf="isAuthenticated">
+      <div class="flex items-center">
+        <img
+          src="{{user?.image}}"
+          alt="{{user?.name}}"
+          class="w-[20px] h-[20px] rounded-full mr-4"
+        />
+        <p class="flex items-center">{{user?.name | titlecase}}</p>
+      </div>
+      <button mat-button [matMenuTriggerFor]="menu">
+        <mat-icon>expand_more</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item [routerLink]="['../chat']">Chat</button>
+        <button mat-menu-item (click)="logout()">Logout</button>
+      </mat-menu>
+    </ng-container>
 
-  <ng-container *ngIf="isAuthenticated">
-    <button mat-button [matMenuTriggerFor]="menu">
-      <mat-icon>expand_more</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item>Chat</button>
-      <button mat-menu-item>Logout</button>
-    </mat-menu>
-  </ng-container>
-
-  <ng-container *ngIf="!isAuthenticated">
-    <button mat-button [matMenuTriggerFor]="menu">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item [routerLink]="['../register']">Sign up</button>
-      <button mat-menu-item [routerLink]="['../login']">Login</button>
-    </mat-menu>
-  </ng-container>
+    <ng-container *ngIf="!isAuthenticated">
+      <button mat-button [matMenuTriggerFor]="menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item [routerLink]="['../register']">Sign up</button>
+        <button mat-menu-item [routerLink]="['../login']">Login</button>
+      </mat-menu>
+    </ng-container>
+  </div>
 </div>
