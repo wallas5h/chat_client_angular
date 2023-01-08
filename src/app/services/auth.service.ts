@@ -2,7 +2,15 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
-import { authEndpoints, loginUserDto, registerUserDto } from "../types/user";
+import { JwtHelperService } from "@auth0/angular-jwt";
+import axios from "axios";
+import { apiUrl } from "src/config/api";
+import {
+  authEndpoints,
+  loginUserDto,
+  registerUserDto,
+  UserEntity,
+} from "../types/user";
 
 @Injectable({
   providedIn: "root",
@@ -12,50 +20,104 @@ export class AuthService {
     private http: HttpClient,
     private route: Router,
     private _snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.user = this.getUserData();
+  }
 
-  apiUrl = "http://localhost:3001/api/auth";
+  apisUrl: string = `${apiUrl}/users`;
 
   isAuthenticated: boolean = false;
   respData: any;
+  user: UserEntity | undefined;
 
   async login(user: loginUserDto) {
-    try {
-      await this.http
-        .post(`${this.apiUrl}/${authEndpoints.login}`, user)
-        .subscribe((res) => {
-          this.respData = res;
-          if (this.respData.token) {
-            this.isAuthenticated = true;
-            localStorage.setItem("token", this.respData.token);
-            this._snackBar.open("Login success", "Ok", { duration: 3000 });
-            this.route.navigate(["../chat"]);
-          } else {
-            this._snackBar.open("Login failed", "Ok", { duration: 3000 });
-          }
-        });
-    } catch (error) {
-      this._snackBar.open("Login failed", "Ok", { duration: 3000 });
-    }
+    axios
+      .post(`${this.apisUrl}/${authEndpoints.login}`, user)
+      .then((res) => {
+        if (res.status == 200) {
+          this.isAuthenticated = true;
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("data", res.data.data);
+
+          this._snackBar.open("Login success", "Ok", { duration: 3000 });
+          this.route.navigate(["../chat"]);
+        } else {
+          this._snackBar.open("Login failed", "Ok", { duration: 3000 });
+        }
+      })
+      .catch((err) => {
+        this._snackBar.open("Login failed", "Ok", { duration: 3000 });
+      });
   }
 
   async register(user: registerUserDto) {
-    try {
-      await this.http
-        .post(`${this.apiUrl}/${authEndpoints.signup}`, user)
-        .subscribe((res) => {
-          this.respData = res;
-          if (this.respData.token) {
-            this.isAuthenticated = true;
-            localStorage.setItem("token", this.respData.token);
-            this._snackBar.open("Signup success", "Ok", { duration: 3000 });
-            this.route.navigate(["../chat"]);
-          } else {
-            this._snackBar.open("Signup failed", "Ok", { duration: 3000 });
-          }
-        });
-    } catch (error) {
-      this._snackBar.open("Signup failed", "Ok", { duration: 3000 });
+    axios
+      .post(`${this.apisUrl}/${authEndpoints.signup}`, user)
+      .then((res) => {
+        if (res.status == 200) {
+          this.isAuthenticated = true;
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("data", res.data.data);
+
+          this._snackBar.open("Signup success", "Ok", { duration: 3000 });
+          this.route.navigate(["../chat"]);
+        } else {
+          this._snackBar.open("Signup failed", "Ok", { duration: 3000 });
+        }
+      })
+      .catch((err) => {
+        this._snackBar.open("Signup failed", "Ok", { duration: 3000 });
+      });
+  }
+
+  async logout() {
+    axios
+      .delete(`${this.apisUrl}/${authEndpoints.logout}`)
+      .then((res) => {
+        if (res.status === 200) {
+          this.isAuthenticated = false;
+          localStorage.clear();
+          this._snackBar.open("Logout success", "Ok", { duration: 3000 });
+          this.route.navigate(["/login"]);
+        }
+      })
+      .catch((err) => {
+        this._snackBar.open("Logout failed", "Ok", { duration: 3000 });
+      });
+  }
+
+  getUsers() {
+    return this.http.get(`${this.apisUrl}`);
+  }
+
+  getUserData() {
+    let hashedData = localStorage.getItem("data");
+
+    if (hashedData !== null) {
+      const helper = new JwtHelperService();
+      const extractData = helper.decodeToken(hashedData);
+      return extractData;
+    } else {
+      return "";
     }
+  }
+
+  findUserByName(inputName: string) {
+    let name = String(inputName);
+    if (name.length > 50) {
+      this._snackBar.open("To long name", "Ok", { duration: 3000 });
+    }
+    axios
+      .post(`${this.apisUrl}/${authEndpoints.findUsers}`, name)
+      .then((res) => {
+        if (res.status !== 200) {
+          this._snackBar.open("Server error, try later", "Ok", {
+            duration: 3000,
+          });
+          return [];
+        }
+
+        return res.data;
+      });
   }
 }
