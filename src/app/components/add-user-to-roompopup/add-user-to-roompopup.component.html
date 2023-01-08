@@ -1,0 +1,78 @@
+<div *ngIf="user?.id==data.room.createdBy.id">
+  <div class="flex items-center content-center w-full">
+    <h4 class="font-[800] capitalize">Room's name: {{roomForm.value.name }}</h4>
+  </div>
+  <div class="my-4">
+    Created by: {{data.room.createdBy.name | titlecase}}
+  </div>
+
+  <div class="my-4">
+    Room type: {{data.room.type | titlecase}}
+  </div>
+
+  <div class="mt-6">
+    <form [formGroup]="addUserForm" (ngSubmit)="inviteUserToRoom()">
+      <label class="">
+        Send invitation to:
+      </label>
+
+      <input
+        class="w-full py-3 px-2 my-2 bg-slate-100"
+        type="text"
+        placeholder="Enter name"
+        formControlName="username"
+      />
+      <button
+        type="submit"
+        mat-button
+        color="primary"
+        mat-raised-button
+        [disabled]="!roomForm.valid"
+        class="w-full"
+      >
+        Invite
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- User not Owner -->
+<!-- User not Owner -->
+<!-- User not Owner -->
+
+<div *ngIf="!(user?.id==data.room.createdBy.id)">
+  <div class="flex items-center content-center w-full">
+    <h4 class="font-[800] capitalize">Room's name: {{roomForm.value.name }}</h4>
+  </div>
+  <div class="my-4">
+    Created by: {{data.room.createdBy.name | titlecase}}
+  </div>
+  <div class="my-4">
+    Room type: {{roomForm.value.type | titlecase}}
+  </div>
+
+  <div *ngIf="roomForm.value.type!=='public'" class="mt-6">
+    <form [formGroup]="addUserForm" (ngSubmit)="inviteUserToRoom()">
+      <label class="">
+        Send invitation to:
+      </label>
+
+      <input
+        class="w-full py-3 px-2 my-2 bg-slate-100"
+        type="text"
+        placeholder="Enter name"
+        formControlName="username"
+      />
+      <button
+        type="submit"
+        mat-button
+        color="primary"
+        mat-raised-button
+        [disabled]="!roomForm.valid"
+        class="w-full"
+      >
+        Invite
+      </button>
+    </form>
+  </div>
+</div>
