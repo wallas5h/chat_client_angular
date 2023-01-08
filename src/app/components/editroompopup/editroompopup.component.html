@@ -1,0 +1,82 @@
+<div *ngIf="user?.id==data.room.createdBy.id">
+  <div class="flex items-center content-center w-full">
+    <h4 class="font-[800] capitalize">Room's name: {{roomForm.value.name }}</h4>
+  </div>
+  <div class="my-4">
+    Created by: {{data.room.createdBy.name | titlecase}}
+  </div>
+  <form class="example-form" [formGroup]="roomForm" (ngSubmit)="updateRoom()">
+    <div class="my-4">
+      <mat-form-field appearance="fill">
+        <mat-label>Change privacy:</mat-label>
+        <mat-select formControlName="type">
+          <mat-option
+            *ngFor="let option of privacyOptions"
+            [value]="roomForm.value.type"
+          >
+            {{option}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="my-4">
+      <mat-label>Change room's name:</mat-label>
+      <input
+        class="w-full py-3 px-2 my-2 bg-slate-100"
+        type="text"
+        placeholder="change name"
+        formControlName="name"
+        [value]="roomForm.value.name"
+      />
+    </div>
+
+    <div class="my-4">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header class="bg-slate-300">
+          <mat-panel-title>
+            User's list:
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <ng-container *ngFor="let member of members">
+          <div class="overflow-y-scroll h-max-[50vh]">
+            <p>
+              {{member.name | titlecase}}
+              <ng-container *ngIf="member.id==user?.id">(You)</ng-container>
+            </p>
+            <button *ngIf="!(member.id==user?.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+      </mat-expansion-panel>
+    </div>
+
+    <button
+      type="submit"
+      mat-button
+      color="warn"
+      mat-raised-button
+      [disabled]="!roomForm.valid"
+      class="w-full"
+    >
+      Update
+    </button>
+  </form>
+</div>
+
+<!-- User not Owner -->
+<!-- User not Owner -->
+<!-- User not Owner -->
+
+<div *ngIf="!(user?.id==data.room.createdBy.id)">
+  <div class="flex items-center content-center w-full">
+    <h4 class="font-[800] capitalize">Room's name: {{roomForm.value.name }}</h4>
+  </div>
+  <div class="my-4">
+    Created by: {{data.room.createdBy.name | titlecase}}
+  </div>
+  <div class="my-4">
+    Room type: {{roomForm.value.type | titlecase}}
+  </div>
+</div>
