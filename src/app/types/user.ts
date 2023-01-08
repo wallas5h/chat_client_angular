@@ -12,6 +12,7 @@ export enum authEndpoints {
   signup = "signup",
   login = "login",
   logout = "logout",
+  findUsers = "find",
 }
 
 export interface UserEntity {
