@@ -18,7 +18,14 @@ export enum authEndpoints {
 export interface UserEntity {
   id: string;
   name: string;
-  email: string;
+  email?: string;
+  image: string;
+  newMessages?: string;
+}
+export interface UserFindResponse {
+  _id: string;
+  name: string;
+  email?: string;
   image: string;
   newMessages?: string;
 }
