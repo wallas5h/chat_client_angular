@@ -19,6 +19,9 @@ export interface roomResponseDto {
   dislikeMembers: string[];
   members: Person[];
 }
+export interface roomResponseAxios {
+  room: roomResponseDto;
+}
 
 export enum roomTypes {
   public = "public",
