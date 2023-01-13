@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import axios from "axios";
 import { apiUrl } from "src/config/api";
+import { roomResponseDto } from "../types/room.dto";
 import { AuthService } from "./auth.service";
 import { SocketioService } from "./socketio.service";
 
@@ -46,5 +47,17 @@ export class ChatService {
 
   async deleteRoom(roomId: string) {
     axios.delete(`${apiUrl}/rooms/${roomId}`);
+  }
+
+  async addUserToRoom(roomId: string, userId: string, userName: string) {
+    const user = {
+      id: userId,
+      name: userName,
+    };
+    return axios.patch(`${apiUrl}/rooms/${roomId}`, user);
+  }
+
+  async updateRoomData(room: roomResponseDto) {
+    return axios.put(`${apiUrl}/rooms/${room._id}`, room);
   }
 }
