@@ -103,21 +103,15 @@ export class AuthService {
   }
 
   findUserByName(inputName: string) {
-    let name = String(inputName);
-    if (name.length > 50) {
-      this._snackBar.open("To long name", "Ok", { duration: 3000 });
-    }
-    axios
-      .post(`${this.apisUrl}/${authEndpoints.findUsers}`, name)
-      .then((res) => {
-        if (res.status !== 200) {
-          this._snackBar.open("Server error, try later", "Ok", {
-            duration: 3000,
-          });
-          return [];
-        }
+    const body = {
+      name: String(inputName),
+    };
 
-        return res.data;
-      });
+    if (body.name.length > 50) {
+      this._snackBar.open("To long name", "Ok", { duration: 3000 });
+      return;
+    }
+
+    return axios.post(`${this.apisUrl}/${authEndpoints.findUsers}`, body);
   }
 }
