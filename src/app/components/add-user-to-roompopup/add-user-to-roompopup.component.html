@@ -1,9 +1,9 @@
 <div *ngIf="user?.id==data.room.createdBy.id">
   <div class="flex items-center content-center w-full">
-    <h4 class="font-[800] capitalize">Room's name: {{roomForm.value.name }}</h4>
+    <h4 class="font-[800] capitalize">Room's name: {{room.name }}</h4>
   </div>
   <div class="my-4">
-    Created by: {{data.room.createdBy.name | titlecase}}
+    Created by: {{room.createdBy.name | titlecase}}
   </div>
 
   <div class="my-4">
@@ -11,9 +11,9 @@
   </div>
 
   <div class="mt-6">
-    <form [formGroup]="addUserForm" (ngSubmit)="inviteUserToRoom()">
+    <form [formGroup]="addUserForm" (ngSubmit)="findUser()">
       <label class="">
-        Send invitation to:
+        Add user:
       </label>
 
       <input
@@ -27,52 +27,47 @@
         mat-button
         color="primary"
         mat-raised-button
-        [disabled]="!roomForm.valid"
+        [disabled]="!addUserForm.valid"
         class="w-full"
       >
-        Invite
+        Search
       </button>
     </form>
   </div>
-</div>
+  <ng-container *ngIf="!findUserFailed">
+    <div class="w-full my-4" *ngIf="findUserFailed===false ">
+      Search results:
+    </div>
 
-<!-- User not Owner -->
-<!-- User not Owner -->
-<!-- User not Owner -->
-
-<div *ngIf="!(user?.id==data.room.createdBy.id)">
-  <div class="flex items-center content-center w-full">
-    <h4 class="font-[800] capitalize">Room's name: {{roomForm.value.name }}</h4>
-  </div>
-  <div class="my-4">
-    Created by: {{data.room.createdBy.name | titlecase}}
-  </div>
-  <div class="my-4">
-    Room type: {{roomForm.value.type | titlecase}}
-  </div>
-
-  <div *ngIf="roomForm.value.type!=='public'" class="mt-6">
-    <form [formGroup]="addUserForm" (ngSubmit)="inviteUserToRoom()">
-      <label class="">
-        Send invitation to:
-      </label>
-
-      <input
-        class="w-full py-3 px-2 my-2 bg-slate-100"
-        type="text"
-        placeholder="Enter name"
-        formControlName="username"
-      />
-      <button
-        type="submit"
-        mat-button
-        color="primary"
-        mat-raised-button
-        [disabled]="!roomForm.valid"
-        class="w-full"
-      >
-        Invite
-      </button>
-    </form>
-  </div>
+    <div class="overflow-y-scroll h-max-[10vh]">
+      <div *ngFor="let user of findUserRes">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <img
+              class="w-[20px] rounded-full mr-2"
+              src="{{user.image}}"
+              alt="{{user.name}}"
+            />
+            <p>
+              {{user.name}}
+            </p>
+          </div>
+          <button
+            (click)="addUserToRoom(user._id, user.name)"
+            class="mr-2 flex items-center"
+          >
+            <mat-icon>add_circle_outline</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container
+    *ngIf="findUserFailed===true && !(addUserForm.value?.username?.length === undefined)"
+  >
+    <div class="my-4">
+      <p class="w-full">Search results:</p>
+      <p>No results, enter another name</p>
+    </div>
+  </ng-container>
 </div>
