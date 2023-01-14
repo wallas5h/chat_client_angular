@@ -1,0 +1,149 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Available rooms
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <mat-selection-list
+    [multiple]="false"
+    [ngClass]="{'overflow-y-scroll':roomsArrayLength>3}"
+    class="h-max-[20vh]"
+  >
+    <div *ngFor="let room of rooms" class="flex items-center">
+      <mat-list-option [value]="room">
+        <div class="flex row-auto justify-between">
+          <button
+            matBadge="4"
+            matBadgeOverlap="false"
+            class="mr-5"
+            matBadgeSize="small"
+            (click)="setCurrentRoom(room._id)"
+          >
+            {{room.name}}
+          </button>
+        </div>
+      </mat-list-option>
+
+      <!-- room options to choice-->
+      <button mat-icon-button [matMenuTriggerFor]="settings">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #settings="matMenu">
+        <ng-container *ngIf="user?.id===room.createdBy.id">
+          <button (click)="editRoomProp(room)" mat-menu-item>
+            Edit room
+          </button>
+          <button (click)="addRoomUser(room)" mat-menu-item>
+            Add user
+          </button>
+          <button (click)="deleteRoom(room._id)" mat-menu-item>
+            Delete room
+          </button>
+        </ng-container>
+        <button (click)="disLikeRoom(room._id)" mat-menu-item>
+          Remove from list
+        </button>
+      </mat-menu>
+    </div>
+  </mat-selection-list>
+  <div class="flex items-center">
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="flex items-center justify-evenly">
+          <div
+            (click)="setRoomAddSearchOpt('add')"
+            class="flex items-center px-5 py-3 hover:bg-slate-200"
+          >
+            <mat-icon>add</mat-icon>
+          </div>
+          <div
+            (click)="setRoomAddSearchOpt('search')"
+            class="flex items-center px-5 py-3 hover:bg-slate-200"
+          >
+            <mat-icon>search</mat-icon>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ng-container *ngIf="roomAddSearchOpt=='add'">
+        <form
+          class="example-form"
+          [formGroup]="roomForm"
+          (ngSubmit)="createNewRoom()"
+        >
+          <input
+            matInput
+            class="w-full py-3 px-2 my-2 bg-slate-100"
+            type="text"
+            placeholder="room name"
+            formControlName="newRoom"
+          />
+          <div class="flex justify-between items-center mt-2">
+            <mat-checkbox class="example-margin" formControlName="private"
+              >Private room</mat-checkbox
+            >
+            <button
+              type="submit"
+              mat-button
+              color="warn"
+              mat-raised-button
+              [disabled]="!roomForm.valid"
+            >
+              Create
+            </button>
+          </div>
+        </form>
+      </ng-container>
+
+      <ng-container *ngIf="roomAddSearchOpt=='search'">
+        <form
+          class="example-form"
+          [formGroup]="searchRoomForm"
+          (ngSubmit)="searchRoom()"
+        >
+          <input
+            matInput
+            class="w-full py-3 px-2 my-2 bg-slate-100"
+            type="text"
+            placeholder="search room"
+            formControlName="searchPhrase"
+            [value]="searchRoomForm.value.searchPhrase"
+          />
+          <div class="flex justify-between items-center mt-2">
+            <button
+              type="submit"
+              mat-button
+              color="warn"
+              mat-raised-button
+              [disabled]="!searchRoomForm.valid"
+              class="w-full"
+            >
+              Search
+            </button>
+          </div>
+        </form>
+      </ng-container>
+    </mat-expansion-panel>
+  </div>
+</mat-expansion-panel>
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Members
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <mat-selection-list [multiple]="false">
+    <mat-list-option *ngFor="let member of members" [value]="member">
+      <button
+        matBadge="4"
+        matBadgeOverlap="false"
+        class="demo-section"
+        (click)="setCurrentRoom(member)"
+      >
+        {{member.name}}
+      </button>
+    </mat-list-option>
+  </mat-selection-list>
+</mat-expansion-panel>
