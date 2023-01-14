@@ -8,8 +8,11 @@ import {
   Validators,
 } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { MaterialModule } from "src/app/Material-Module";
 import { AuthService } from "src/app/services/auth.service";
+import { ChatService } from "src/app/services/chat.service";
+import { roomResponseAxios } from "src/app/types/room.dto";
 
 @Component({
   selector: "app-editroompopup",
@@ -40,20 +43,41 @@ export class EditroompopupComponent implements OnInit {
   user = this.authService.user;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: roomResponseAxios,
     private ref: MatDialogRef<EditroompopupComponent>,
-    private authService: AuthService
+    private authService: AuthService,
+    private chatService: ChatService,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {}
 
   updateRoom() {
-    console.log(this.roomForm.value);
+    this.data.room.type = String(this.roomForm.value.type);
+    this.data.room.name = String(this.roomForm.value.name);
+    this.data.room.members = this.members;
+    this.chatService
+      .updateRoomData(this.data.room)
+      .then((res) => {
+        if (res.status === 200) {
+          this._snackBar.open("Room updated", "Ok", { duration: 3000 });
+          // this.closeDialogWindow();
+        }
+      })
+      .catch((err) => {
+        this._snackBar.open("Update error, try later", "Ok", {
+          duration: 3000,
+        });
+      });
   }
 
-  inviteUserToRoom() {
-    // console.log(name, id);
-    console.log(this.addUserForm.value.username);
-    this.addUserForm.value.username = "";
+  deleteMemberFromRoom(id: string) {
+    this.members = this.members.filter((item: any) => {
+      return item.id !== id;
+    });
+  }
+
+  closeDialogWindow() {
+    this.ref.close();
   }
 }

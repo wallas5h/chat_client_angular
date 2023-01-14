@@ -38,17 +38,22 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <ng-container *ngFor="let member of members">
-          <div class="overflow-y-scroll h-max-[50vh]">
-            <p>
-              {{member.name | titlecase}}
-              <ng-container *ngIf="member.id==user?.id">(You)</ng-container>
-            </p>
-            <button *ngIf="!(member.id==user?.id)">
-              <mat-icon>delete</mat-icon>
-            </button>
+        <div class="overflow-y-scroll h-max-[10vh]">
+          <div *ngFor="let member of members">
+            <div class="flex items-center justify-between mr-3">
+              <p>
+                {{member.name | titlecase}}
+                <ng-container *ngIf="member.id==user?.id">(You)</ng-container>
+              </p>
+              <button
+                (click)="deleteMemberFromRoom(member.id)"
+                *ngIf="!(member.id==user?.id)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </div>
-        </ng-container>
+        </div>
       </mat-expansion-panel>
     </div>
 
@@ -63,20 +68,4 @@
       Update
     </button>
   </form>
-</div>
-
-<!-- User not Owner -->
-<!-- User not Owner -->
-<!-- User not Owner -->
-
-<div *ngIf="!(user?.id==data.room.createdBy.id)">
-  <div class="flex items-center content-center w-full">
-    <h4 class="font-[800] capitalize">Room's name: {{roomForm.value.name }}</h4>
-  </div>
-  <div class="my-4">
-    Created by: {{data.room.createdBy.name | titlecase}}
-  </div>
-  <div class="my-4">
-    Room type: {{roomForm.value.type | titlecase}}
-  </div>
 </div>
