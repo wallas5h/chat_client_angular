@@ -1,5 +1,11 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+} from "@angular/core";
 import {
   FormControl,
   FormGroup,
@@ -34,6 +40,7 @@ import { EditroompopupComponent } from "../editroompopup/editroompopup.component
   styles: [],
 })
 export class SidebarComponent implements OnInit {
+  @Output() passRoomDetails = new EventEmitter<roomResponseDto>();
   rooms: roomResponseDto[] | [] = [];
   respData: any;
   members: any = [];
@@ -67,14 +74,9 @@ export class SidebarComponent implements OnInit {
       this.respData = res;
       if (this.respData.users) {
         this.members = this.respData.users;
-        console.log(this.members);
+        // console.log(this.members);
       }
     });
-
-    // socket.on("new-user", (payload) => {
-    //   console.log("działa chat service");
-    //   console.log(payload);
-    // });
   }
 
   setRoomAddSearchOpt(value: string) {
@@ -91,7 +93,9 @@ export class SidebarComponent implements OnInit {
     });
   }
 
-  setCurrentRoom(room: string) {}
+  setCurrentRoom(room: roomResponseDto) {
+    this.passRoomDetails.emit(room);
+  }
 
   editRoomProp(room: roomResponseDto) {
     let popup = this.dialog.open(EditroompopupComponent, {
