@@ -20,6 +20,7 @@ export interface UserEntity {
   name: string;
   email?: string;
   image: string;
+  status: string;
   newMessages?: string;
 }
 export interface UserFindResponse {
@@ -27,5 +28,6 @@ export interface UserFindResponse {
   name: string;
   email?: string;
   image: string;
+  status: string;
   newMessages?: string;
 }
