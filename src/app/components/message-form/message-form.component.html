@@ -1,0 +1,88 @@
+<div
+  class="h-[80vh] border border-slate-300 rounded-xl overflow-y-scroll mb-[20px]"
+>
+  <div class="flex justify-center items-center bg-teal-300">
+    <p class="" *ngIf="room._id">
+      You are in the {{room.name | titlecase}} room.
+    </p>
+    <p class="flex items-center" *ngIf="privMsgMember._id">
+      Your conversation with {{privMsgMember.name | titlecase}}
+      <img
+        src="{{privMsgMember.image}}"
+        alt="{{privMsgMember.name}}"
+        class="w-[40px] h-[40px] object-cover mx-auto my-1 rounded-full ml-2"
+      />
+    </p>
+    <p class="" *ngIf="!room._id && !privMsgMember._id">
+      Click and choice any room to start conversation.
+    </p>
+  </div>
+  <div class="overflow-y-scroll h-max-[60vh]">
+    <ng-container *ngFor="let message of messages">
+      <div class="flex w-full justify-center items-center my-2">
+        <p
+          class="flex w-[150px] justify-center items-center p-2 rounded-lg bg-lime-300"
+        >
+          {{message._id}}
+        </p>
+      </div>
+      <ng-container *ngFor="let item of message.messagesByDate">
+        <div
+          class="flex my-3 justify-start"
+          [ngClass]="{ 'justify-end': item.from.id===user?.id }"
+        >
+          <div class="flex flex-wrap items-center p-[5px] max-w-[60%] rounded">
+            <ng-container *ngIf="item.from.id!==user?.id">
+              <!-- <img
+                src="{{item.from.image}}"
+                alt="{{item.from.name}}"
+                class="w-[35px] h-[35px] object-cover rounded-full mr-[10px]"
+              /> -->
+            </ng-container>
+
+            <div
+              class="flex flex-wrap items-center min-w-[60px] break-all px-3 py-1 rounded-lg"
+              [ngClass]="{ 'ml-auto bg-blue-200': item.from.id===user?.id , 
+              'bg-indigo-200': item.from.id!==user?.id}"
+            >
+              {{item.content}}
+            </div>
+            <div
+              class="flex justify-end basis-[50%] ml-auto text-xs mt-1"
+              [ngClass]="{ 'mx-auto': item.from.id!==user?.id }"
+            >
+              {{item.time}}
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+    <p id="point">.</p>
+  </div>
+</div>
+
+<div>
+  <form
+    class="example-form flex justify-evenly items-center"
+    [formGroup]="messageForm"
+    (ngSubmit)="sendMessage()"
+  >
+    <input
+      class="w-[80%] py-3 px-2 my-2 bg-slate-100"
+      type="text"
+      placeholder="Your message"
+      formControlName="newMessage"
+      [value]="messageForm.value.newMessage"
+    />
+
+    <button
+      type="submit"
+      mat-button
+      color="warn"
+      mat-raised-button
+      [disabled]="!messageForm.valid"
+    >
+      Send
+    </button>
+  </form>
+</div>
