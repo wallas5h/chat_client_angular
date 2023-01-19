@@ -1,7 +1,12 @@
-<mat-drawer-container class="example-container h-screen">
+<mat-drawer-container class="example-container h-screen mt-2">
   <mat-drawer mode="side" opened class="">
-    <app-sidebar></app-sidebar>
+    <app-sidebar (passRoomDetails)="onPassRoomDetails($event)"></app-sidebar>
   </mat-drawer>
 
-  <mat-drawer-content>Main content</mat-drawer-content>
+  <mat-drawer-content>
+    <app-message-form
+      [room]="currentRoom"
+      [privMsgMember]="messageMember"
+    ></app-message-form>
+  </mat-drawer-content>
 </mat-drawer-container>
