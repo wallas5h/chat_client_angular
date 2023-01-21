@@ -14,3 +14,10 @@ export interface MessageResponseDto {
   _id?: string;
   messagesByDate: MessagesByDate[];
 }
+
+export enum MessageTypes {
+  text = "text",
+  image = "image",
+  video = "video",
+  raw = "raw",
+}
