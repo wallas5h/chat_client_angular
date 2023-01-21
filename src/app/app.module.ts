@@ -12,6 +12,7 @@ import { AuthService } from "./services/auth.service";
 import { ChatService } from "./services/chat.service";
 import { SocketioService } from "./services/socketio.service";
 import { TokenInterceptorService } from "./services/token-interceptor.service";
+import { UploadService } from "./services/upload.service";
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent, HomeComponent],
@@ -26,6 +27,7 @@ import { TokenInterceptorService } from "./services/token-interceptor.service";
     AuthService,
     ChatService,
     SocketioService,
+    UploadService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,
