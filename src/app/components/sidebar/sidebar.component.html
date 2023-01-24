@@ -25,7 +25,12 @@
       </mat-list-option>
 
       <!-- room options to choice-->
-      <button mat-icon-button [matMenuTriggerFor]="settings">
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="settings"
+        matTooltip="more"
+        matTooltipPosition="right"
+      >
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #settings="matMenu">
