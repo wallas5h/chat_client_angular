@@ -14,10 +14,12 @@ import {
   Validators,
 } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { CloudinaryModule } from "@cloudinary/ng";
 import { MaterialModule } from "src/app/Material-Module";
 import { AuthService } from "src/app/services/auth.service";
 import { socket } from "src/app/services/socketio.service";
-import { MessageResponseDto } from "src/app/types/message.dto";
+import { UploadService } from "src/app/services/upload.service";
+import { MessageResponseDto, MessageTypes } from "src/app/types/message.dto";
 import { roomResponseDto } from "src/app/types/room.dto";
 import { UserFindResponse } from "src/app/types/user";
 
@@ -33,6 +35,7 @@ import { UserFindResponse } from "src/app/types/user";
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
+    CloudinaryModule,
   ],
   templateUrl: "./message-form.component.html",
   styles: [],
@@ -43,6 +46,14 @@ export class MessageFormComponent implements OnInit, OnChanges {
   user = this.authService.user;
   messages: MessageResponseDto[] | [] = [];
   currentRoomId: string = "";
+  messageType: MessageTypes = MessageTypes.text;
+
+  uploadImageUrl: string | null = "";
+  uploadVideoUrl: string = "";
+  uploadRawFileUrl: string = "";
+  isFileLoaded: boolean = false;
+
+  isMessageHover: boolean = false;
 
   messageForm = new FormGroup({
     newMessage: new FormControl("", Validators.required),
@@ -50,7 +61,8 @@ export class MessageFormComponent implements OnInit, OnChanges {
 
   constructor(
     private authService: AuthService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private uploadService: UploadService
   ) {}
 
   ngOnInit(): void {}
@@ -87,9 +99,27 @@ export class MessageFormComponent implements OnInit, OnChanges {
     });
   }
 
-  sendMessage() {
+  sendMessage(): void {
     // console.log(this.messageForm.value.newMessage);
-    const message = this.messageForm.value.newMessage;
+    let message: string | null | undefined = "";
+
+    switch (this.messageType) {
+      case MessageTypes.text:
+        message = this.messageForm.value.newMessage;
+        break;
+      case MessageTypes.image:
+        message = this.uploadImageUrl;
+        break;
+      case MessageTypes.video:
+        message = this.uploadVideoUrl;
+        break;
+      case MessageTypes.raw:
+        message = this.uploadRawFileUrl;
+        break;
+
+      default:
+        break;
+    }
 
     if (!message) return;
     if (!this.currentRoomId) return;
@@ -103,6 +133,7 @@ export class MessageFormComponent implements OnInit, OnChanges {
         "message-room",
         roomId,
         message,
+        this.messageType,
         this.user,
         stringHoursDate,
         stringYearDate
@@ -112,7 +143,86 @@ export class MessageFormComponent implements OnInit, OnChanges {
     } finally {
       this.messageForm.value.newMessage = "";
       this.scrollToBottom();
+      this.messageType = MessageTypes.text;
+      this.isFileLoaded = false;
     }
+  }
+
+  async deleteMessage(messageId: string) {
+    try {
+      socket.emit("delete-room-messages", messageId, this.currentRoomId);
+    } catch (error) {
+      this._snackBar.open("Delete message failed", "Ok", { duration: 3000 });
+    }
+
+    // await axios.delete(`${apiUrl}/messages/${id}`);
+    // this.getMessagesFromRoom();
+  }
+
+  async cloudUploadImage(e: any) {
+    this.messageType = MessageTypes.image;
+    this.isFileLoaded = true;
+
+    const validateFile = this.uploadService.validateUploadFile(
+      e,
+      this.messageType
+    );
+
+    if (!validateFile) {
+      this.isFileLoaded = false;
+      return;
+    }
+
+    this.uploadImageUrl = await this.uploadService.uploadFileInCloud(
+      validateFile,
+      MessageTypes.image,
+      this.currentRoomId
+    );
+    this.sendMessage();
+  }
+
+  async cloudUploadVideo(e: any) {
+    this.messageType = MessageTypes.video;
+    this.isFileLoaded = true;
+
+    const validateFile = this.uploadService.validateUploadFile(
+      e,
+      this.messageType
+    );
+
+    if (!validateFile) {
+      this.isFileLoaded = false;
+      return;
+    }
+
+    this.uploadVideoUrl = await this.uploadService.uploadFileInCloud(
+      validateFile,
+      MessageTypes.video,
+      this.currentRoomId
+    );
+    this.sendMessage();
+  }
+
+  async cloudUploadRawFile(e: any) {
+    this.messageType = MessageTypes.raw;
+    this.isFileLoaded = true;
+
+    const validateFile = this.uploadService.validateUploadFile(
+      e,
+      this.messageType
+    );
+
+    if (!validateFile) {
+      this.isFileLoaded = false;
+      return;
+    }
+
+    this.uploadRawFileUrl = await this.uploadService.uploadFileInCloud(
+      validateFile,
+      MessageTypes.raw,
+      this.currentRoomId
+    );
+    this.sendMessage();
   }
 
   orderId = (id1: string, id2: string) => {
@@ -139,7 +249,15 @@ export class MessageFormComponent implements OnInit, OnChanges {
     return date;
   };
 
+  transformBytesToMB(value: string) {
+    return (Number(value) / 1000000).toFixed(3);
+  }
+
   scrollToBottom() {
     document.getElementById("point")?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  onMessageHover(value: boolean) {
+    this.isMessageHover = value;
   }
 }
