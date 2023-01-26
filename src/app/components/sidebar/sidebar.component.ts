@@ -14,7 +14,9 @@ import {
   Validators,
 } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
+import { RouterModule } from "@angular/router";
 import { MaterialModule } from "src/app/Material-Module";
+import { ChatRoutingModule } from "src/app/pages/chat/chat-routing.module";
 import { ChatComponent } from "src/app/pages/chat/chat.component";
 import { AuthService } from "src/app/services/auth.service";
 import { ChatService } from "src/app/services/chat.service";
@@ -35,6 +37,8 @@ import { EditroompopupComponent } from "../editroompopup/editroompopup.component
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
+    RouterModule,
+    ChatRoutingModule,
   ],
   templateUrl: "./sidebar.component.html",
   styles: [],
