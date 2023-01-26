@@ -15,7 +15,10 @@ import {
 } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { CloudinaryModule } from "@cloudinary/ng";
+import axios from "axios";
+import { apiUrl } from "config/api";
 import { MaterialModule } from "src/app/Material-Module";
+import { ChatRoutingModule } from "src/app/pages/chat/chat-routing.module";
 import { AuthService } from "src/app/services/auth.service";
 import { socket } from "src/app/services/socketio.service";
 import { UploadService } from "src/app/services/upload.service";
@@ -36,6 +39,7 @@ import { UserFindResponse } from "src/app/types/user";
     ReactiveFormsModule,
     FormsModule,
     CloudinaryModule,
+    ChatRoutingModule,
   ],
   templateUrl: "./message-form.component.html",
   styles: [],
@@ -65,11 +69,48 @@ export class MessageFormComponent implements OnInit, OnChanges {
     private uploadService: UploadService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const roomId = urlParams.get("room");
+    const memberId = urlParams.get("member");
+
+    // if (!roomId) return;
+    if (roomId) {
+      axios
+        .get(`${apiUrl}/rooms/${roomId}`)
+        .then((res) => {
+          this.room = res.data.room;
+          this.currentRoomId = this.room._id;
+
+          this.joinRoom(this.room._id);
+        })
+        .catch(() => {
+          console.log("error");
+        });
+    }
+    if (memberId) {
+      axios
+        .get(`${apiUrl}/users/${memberId}`)
+        .then((res) => {
+          this.privMsgMember = res.data.user[0];
+          const roomId = this.orderId(
+            String(this.user?.id),
+            this.privMsgMember._id
+          );
+          this.joinRoom(roomId);
+          this.currentRoomId = roomId;
+        })
+        .catch(() => {
+          console.log("error");
+        });
+    }
+
+    this.getMessagesFromRoom();
+    this.scrollToBottom();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log("room i person", this.room, this.privMsgMember);
-
     if (this.room._id && !this.privMsgMember._id) {
       this.joinRoom(this.room._id);
       this.currentRoomId = this.room._id;
