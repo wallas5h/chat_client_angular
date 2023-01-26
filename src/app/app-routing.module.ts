@@ -7,18 +7,22 @@ const routes: Routes = [
   {
     path: "",
     component: HomeComponent,
-  },
-  {
-    path: "private",
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import("./private/private.module").then((opt) => opt.PrivateModule),
+    pathMatch: "full",
   },
   {
     path: "chat",
     canActivate: [AuthGuard],
     loadComponent: () =>
       import("./pages/chat/chat.component").then((opt) => opt.ChatComponent),
+    children: [
+      {
+        path: "room",
+        loadComponent: () =>
+          import("./components/message-form/message-form.component").then(
+            (opt) => opt.MessageFormComponent
+          ),
+      },
+    ],
   },
   {
     path: "login",
@@ -32,11 +36,11 @@ const routes: Routes = [
         (opt) => opt.RegisterComponent
       ),
   },
-  {
-    path: "**",
-    redirectTo: "login",
-    pathMatch: "full",
-  },
+  // {
+  //   path: "**",
+  //   redirectTo: "login",
+  //   pathMatch: "full",
+  // },
 ];
 
 @NgModule({
