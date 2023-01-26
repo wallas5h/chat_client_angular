@@ -7,6 +7,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { HeaderComponent } from "./components/header/header.component";
 import { MaterialModule } from "./Material-Module";
+import { ChatRoutingModule } from "./pages/chat/chat-routing.module";
 import { HomeComponent } from "./pages/home/home.component";
 import { AuthService } from "./services/auth.service";
 import { ChatService } from "./services/chat.service";
@@ -22,6 +23,7 @@ import { UploadService } from "./services/upload.service";
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
+    ChatRoutingModule,
   ],
   providers: [
     AuthService,
