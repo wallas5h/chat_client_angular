@@ -4,12 +4,13 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { AuthService } from "src/app/services/auth.service";
 import { ChatService } from "src/app/services/chat.service";
-import { socket, SocketioService } from "src/app/services/socketio.service";
+import { SocketioService } from "src/app/services/socketio.service";
 import { roomResponseDto } from "src/app/types/room.dto";
 import { UserFindResponse } from "src/app/types/user";
 import { MessageFormComponent } from "../../components/message-form/message-form.component";
 import { SidebarComponent } from "../../components/sidebar/sidebar.component";
 import { MaterialModule } from "../../Material-Module";
+import { ChatRoutingModule } from "./chat-routing.module";
 
 @Component({
   selector: "app-chat",
@@ -27,6 +28,7 @@ import { MaterialModule } from "../../Material-Module";
     FormsModule,
     SidebarComponent,
     MessageFormComponent,
+    ChatRoutingModule,
   ],
 })
 export class ChatComponent implements OnInit {
@@ -51,18 +53,13 @@ export class ChatComponent implements OnInit {
     // });
   }
 
-  onPassRoomDetails(room: any) {
-    if (room.members) {
-      this.currentRoom = room;
+  onPassRoomDetails(props: any) {
+    if (props.members) {
+      this.currentRoom = props;
       this.messageMember = {} as UserFindResponse;
-    } else if (!room.members) {
+    } else if (!props.members) {
       this.currentRoom = {} as roomResponseDto;
-      this.messageMember = room;
+      this.messageMember = props;
     }
-
-    socket.on("new-user", (payload) => {
-      console.log("działa chat service");
-      console.log(payload);
-    });
   }
 }
