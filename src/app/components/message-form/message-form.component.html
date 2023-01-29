@@ -79,9 +79,9 @@
                   <mat-icon>attachment</mat-icon>
                   <a
                     class="font-semibold"
-                    href="{{item.content.split(' | ')[1]}}"
+                    href="{{item.content.split(' | ')[0]}}"
                     target="_blank"
-                    >{{item.content.split(' | ')[0]}}</a
+                    >{{item.content.split(' | ')[1]}}</a
                   >
                   <div>
                     <span class="text-xs"
@@ -120,7 +120,7 @@
     *ngIf="currentRoomId"
   >
     <div class="flex justify-evenly items-center mx-2">
-      <div ng-disabled="isFileLoaded">
+      <!-- <div ng-disabled="isFileLoaded">
         <label (click)="uploadRawFile.click()" class="cursor-pointer">
           <mat-icon> attach_file</mat-icon>
         </label>
@@ -134,7 +134,7 @@
           accept=".pdf, text/plain, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
           (change)="cloudUploadRawFile($event)"
         />
-      </div>
+      </div> -->
       <div ng-disabled="isFileLoaded">
         <label (click)="uploadImage.click()" class="cursor-pointer">
           <mat-icon>add_a_photo</mat-icon>
@@ -171,6 +171,8 @@
       type="text"
       placeholder="Your message"
       formControlName="newMessage"
+      id="inputText"
+      autofocus
       [value]="messageForm.value.newMessage"
     />
 
