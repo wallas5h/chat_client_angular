@@ -22,7 +22,7 @@ export class UploadService {
     data.append("file", file);
     data.append("upload_preset", "enelcoff");
     data.append("folder", `messages/${roomId}`);
-    data.append("public_id", `${file.name}`);
+    // data.append("public_id", `${file.name}`);
 
     //file.name
 
@@ -35,8 +35,9 @@ export class UploadService {
       )
       .then((res) => {
         if (fileType === MessageTypes.raw) {
-          return [file.name, res.data.url, res.data.bytes].join(" | ");
+          return [res.data.url, file.name, res.data.bytes].join(" | ");
         }
+        // console.log(res.data);
         return res.data.url;
       })
       .catch((e) => {
@@ -79,4 +80,28 @@ export class UploadService {
 
     return file;
   }
+
+  orderId = (id1: string, id2: string) => {
+    if (id1 > id2) {
+      return id1 + "-" + id2;
+    } else {
+      return id2 + "-" + id1;
+    }
+  };
+
+  getStringDate = () => {
+    const year = new Date().getFullYear().toString();
+    const month = (new Date().getMonth() + 1).toString();
+    const day = new Date().getUTCDate().toString();
+
+    return `${day}/${month}/${year}`;
+  };
+
+  getStringHours = () => {
+    const localStringDate = new Date().toLocaleString();
+    const date1 = localStringDate.split(", ");
+    const date = date1[1];
+
+    return date;
+  };
 }
