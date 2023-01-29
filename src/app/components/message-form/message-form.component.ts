@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
 import {
+  AfterViewInit,
   Component,
   Input,
   OnChanges,
@@ -14,7 +15,6 @@ import {
   Validators,
 } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { CloudinaryModule } from "@cloudinary/ng";
 import axios from "axios";
 import { apiUrl } from "config/api";
 import { MaterialModule } from "src/app/Material-Module";
@@ -38,13 +38,12 @@ import { UserFindResponse } from "src/app/types/user";
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    CloudinaryModule,
     ChatRoutingModule,
   ],
   templateUrl: "./message-form.component.html",
   styles: [],
 })
-export class MessageFormComponent implements OnInit, OnChanges {
+export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() room: roomResponseDto = {} as roomResponseDto;
   @Input() privMsgMember: UserFindResponse = {} as UserFindResponse;
   user = this.authService.user;
@@ -58,6 +57,8 @@ export class MessageFormComponent implements OnInit, OnChanges {
   isFileLoaded: boolean = false;
 
   isMessageHover: boolean = false;
+  intervalId: any;
+  logNb: number = 0;
 
   messageForm = new FormGroup({
     newMessage: new FormControl("", Validators.required),
@@ -69,7 +70,27 @@ export class MessageFormComponent implements OnInit, OnChanges {
     private uploadService: UploadService
   ) {}
 
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 500);
+  }
+
   ngOnInit(): void {
+    this.setupRoomInfoAfterPageRefresh();
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 500);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.setupRoomInfoAfterSideBarChange();
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 500);
+  }
+
+  setupRoomInfoAfterPageRefresh = () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const roomId = urlParams.get("room");
@@ -94,7 +115,7 @@ export class MessageFormComponent implements OnInit, OnChanges {
         .get(`${apiUrl}/users/${memberId}`)
         .then((res) => {
           this.privMsgMember = res.data.user[0];
-          const roomId = this.orderId(
+          const roomId = this.uploadService.orderId(
             String(this.user?.id),
             this.privMsgMember._id
           );
@@ -108,30 +129,42 @@ export class MessageFormComponent implements OnInit, OnChanges {
 
     this.getMessagesFromRoom();
     this.scrollToBottom();
-  }
+    this.intervalId = setInterval(() => {
+      // this.logNb + 1;
+      console.log(this.logNb);
+    }, 500);
+  };
 
-  ngOnChanges(changes: SimpleChanges): void {
+  setupRoomInfoAfterSideBarChange = () => {
+    console.log(this.logNb);
+    clearInterval(this.intervalId);
     if (this.room._id && !this.privMsgMember._id) {
-      this.joinRoom(this.room._id);
       this.currentRoomId = this.room._id;
+      this.joinRoom(this.room._id);
     } else if (!this.room._id && this.privMsgMember._id) {
-      const roomId = this.orderId(
+      const roomId = this.uploadService.orderId(
         String(this.user?.id),
         this.privMsgMember._id
       );
-      this.joinRoom(roomId);
       this.currentRoomId = roomId;
+      this.joinRoom(roomId);
     } else {
       return;
     }
 
-    this.getMessagesFromRoom();
-    this.scrollToBottom();
-  }
+    // this.getMessagesFromRoom();
+    // this.scrollToBottom();
+
+    this.intervalId = setInterval(() => {
+      // this.logNb + 1;
+      console.log(this.logNb);
+    }, 300);
+  };
 
   joinRoom(roomId: string) {
     socket.emit("join-room", roomId);
     this.getMessagesFromRoom();
+    this.scrollToBottom();
   }
 
   getMessagesFromRoom() {
@@ -165,8 +198,8 @@ export class MessageFormComponent implements OnInit, OnChanges {
     if (!message) return;
     if (!this.currentRoomId) return;
 
-    const stringYearDate = this.getStringDate();
-    const stringHoursDate = this.getStringHours();
+    const stringYearDate = this.uploadService.getStringDate();
+    const stringHoursDate = this.uploadService.getStringHours();
     const roomId = this.currentRoomId;
 
     try {
@@ -195,9 +228,6 @@ export class MessageFormComponent implements OnInit, OnChanges {
     } catch (error) {
       this._snackBar.open("Delete message failed", "Ok", { duration: 3000 });
     }
-
-    // await axios.delete(`${apiUrl}/messages/${id}`);
-    // this.getMessagesFromRoom();
   }
 
   async cloudUploadImage(e: any) {
@@ -265,30 +295,6 @@ export class MessageFormComponent implements OnInit, OnChanges {
     );
     this.sendMessage();
   }
-
-  orderId = (id1: string, id2: string) => {
-    if (id1 > id2) {
-      return id1 + "-" + id2;
-    } else {
-      return id2 + "-" + id1;
-    }
-  };
-
-  getStringDate = () => {
-    const year = new Date().getFullYear().toString();
-    const month = (new Date().getMonth() + 1).toString();
-    const day = new Date().getUTCDate().toString();
-
-    return `${day}/${month}/${year}`;
-  };
-
-  getStringHours = () => {
-    const localStringDate = new Date().toLocaleString();
-    const date1 = localStringDate.split(", ");
-    const date = date1[1];
-
-    return date;
-  };
 
   transformBytesToMB(value: string) {
     return (Number(value) / 1000000).toFixed(3);
