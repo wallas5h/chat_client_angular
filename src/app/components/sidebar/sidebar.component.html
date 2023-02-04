@@ -21,16 +21,19 @@
           <!-- <a [routerLink]="['room']" [queryParams]="{room: room._id}"
             >{{room.name}}</a> -->
 
-          <button
-            matBadge="4"
-            matBadgeOverlap="false"
-            class="mr-5"
-            matBadgeSize="small"
-          >
-            {{room.name}}
+          <button class="flex justify-between mr-5">
+            <span>{{room.name}}</span>
           </button>
         </div>
       </mat-list-option>
+
+      <!-- new messages alert-->
+      <span
+        class="block ml-3 rounded-full w-[25px] h-[20px] bg-green-400 text-sm text-center"
+        [ngClass]="{'hidden': !this.socketioService.newMessages[room._id] }"
+      >
+        {{this.socketioService.newMessages[room._id]}}
+      </span>
 
       <!-- room options to choice-->
       <button
@@ -154,7 +157,7 @@
   >
     <div *ngFor="let member of members" class="flex items-center">
       <mat-list-option
-        (click)="setCurrentRoom(member)"
+        (click)="setCurrentRoom(member,true)"
         [value]="member"
         [disabled]="user?.id===member._id"
         [routerLink]="['room']"
@@ -172,6 +175,20 @@
           <span *ngIf="user?.id===member._id" class="ml-2">(You)</span>
         </button>
       </mat-list-option>
+      <!-- new messages alert-->
+      <span
+        class="block ml-3 rounded-full w-[25px] h-[20px] bg-green-400 text-sm text-center"
+        [ngClass]="{'hidden': !this.newMessages[orderId(member._id)]}"
+      >
+        {{this.newMessages[orderId(member._id)]}}
+      </span>
+      <!-- <ng-container *ngIf="this.newMessages[orderId(member._id)]">
+        <span
+          class="block mr-3 rounded-full w-[20px] h-[20px] bg-green-400 text-sm text-center"
+        >
+          {{this.newMessages[orderId(member._id)]}}
+        </span>
+      </ng-container> -->
     </div>
   </mat-selection-list>
 </mat-expansion-panel>
