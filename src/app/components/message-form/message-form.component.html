@@ -1,22 +1,22 @@
+<div class="flex justify-center items-center relative bg-teal-300">
+  <p class="top-0 sticky" *ngIf="room._id">
+    You are in the {{room.name | titlecase}} room.
+  </p>
+  <p class="flex items-center top-0 sticky" *ngIf="privMsgMember._id">
+    Your conversation with {{privMsgMember.name | titlecase}}
+    <img
+      src="{{privMsgMember.image}}"
+      alt="{{privMsgMember.name}}"
+      class="w-[40px] h-[40px] object-cover mx-auto my-1 rounded-full ml-2"
+    />
+  </p>
+  <p class="" *ngIf="!currentRoomId">
+    Click and choice any room to start conversation.
+  </p>
+</div>
 <div
   class="h-[80vh] border border-slate-300 rounded-xl overflow-y-scroll mb-[20px]"
 >
-  <div class="flex justify-center items-center bg-teal-300">
-    <p class="" *ngIf="room._id">
-      You are in the {{room.name | titlecase}} room.
-    </p>
-    <p class="flex items-center" *ngIf="privMsgMember._id">
-      Your conversation with {{privMsgMember.name | titlecase}}
-      <img
-        src="{{privMsgMember.image}}"
-        alt="{{privMsgMember.name}}"
-        class="w-[40px] h-[40px] object-cover mx-auto my-1 rounded-full ml-2"
-      />
-    </p>
-    <p class="" *ngIf="!room._id && !privMsgMember._id">
-      Click and choice any room to start conversation.
-    </p>
-  </div>
   <div class="overflow-y-scroll h-max-[60vh]">
     <ng-container *ngFor="let message of messages">
       <div class="flex w-full justify-center items-center my-2">

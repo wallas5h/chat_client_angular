@@ -20,7 +20,7 @@ import { apiUrl } from "config/api";
 import { MaterialModule } from "src/app/Material-Module";
 import { ChatRoutingModule } from "src/app/pages/chat/chat-routing.module";
 import { AuthService } from "src/app/services/auth.service";
-import { socket } from "src/app/services/socketio.service";
+import { socket, SocketioService } from "src/app/services/socketio.service";
 import { UploadService } from "src/app/services/upload.service";
 import { MessageResponseDto, MessageTypes } from "src/app/types/message.dto";
 import { roomResponseDto } from "src/app/types/room.dto";
@@ -67,7 +67,8 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
   constructor(
     private authService: AuthService,
     private _snackBar: MatSnackBar,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private socketService: SocketioService
   ) {}
 
   ngAfterViewInit(): void {
@@ -93,8 +94,8 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
   setupRoomInfoAfterPageRefresh = () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const roomId = urlParams.get("room");
-    const memberId = urlParams.get("member");
+    let roomId = urlParams.get("room");
+    let memberId = urlParams.get("member");
 
     // if (!roomId) return;
     if (roomId) {
@@ -115,12 +116,12 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
         .get(`${apiUrl}/users/${memberId}`)
         .then((res) => {
           this.privMsgMember = res.data.user[0];
-          const roomId = this.uploadService.orderId(
+          const roomIdMember = this.uploadService.orderId(
             String(this.user?.id),
             this.privMsgMember._id
           );
-          this.joinRoom(roomId);
-          this.currentRoomId = roomId;
+          this.joinRoom(roomIdMember);
+          this.currentRoomId = roomIdMember;
         })
         .catch(() => {
           console.log("error");
@@ -130,17 +131,16 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
     this.getMessagesFromRoom();
     this.scrollToBottom();
     this.intervalId = setInterval(() => {
-      // this.logNb + 1;
-      console.log(this.logNb);
-    }, 500);
+      console.log(this.intervalId);
+      clearInterval(this.intervalId);
+    }, 100);
   };
 
   setupRoomInfoAfterSideBarChange = () => {
-    console.log(this.logNb);
-    clearInterval(this.intervalId);
     if (this.room._id && !this.privMsgMember._id) {
       this.currentRoomId = this.room._id;
       this.joinRoom(this.room._id);
+      this.privMsgMember = {} as UserFindResponse;
     } else if (!this.room._id && this.privMsgMember._id) {
       const roomId = this.uploadService.orderId(
         String(this.user?.id),
@@ -148,6 +148,7 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
       );
       this.currentRoomId = roomId;
       this.joinRoom(roomId);
+      this.room = {} as roomResponseDto;
     } else {
       return;
     }
@@ -156,9 +157,9 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
     // this.scrollToBottom();
 
     this.intervalId = setInterval(() => {
-      // this.logNb + 1;
-      console.log(this.logNb);
-    }, 300);
+      console.log(this.intervalId);
+      clearInterval(this.intervalId);
+    }, 100);
   };
 
   joinRoom(roomId: string) {
@@ -168,8 +169,11 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   getMessagesFromRoom() {
+    // this.messages = this.socketService.getMessagesFromRoom();
     socket.off("room-messages").on("room-messages", (roomMessages) => {
-      this.messages = roomMessages;
+      if (roomMessages[0].messagesByDate[0].to === this.currentRoomId) {
+        this.messages = roomMessages;
+      }
     });
   }
 
