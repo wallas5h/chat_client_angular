@@ -47,13 +47,18 @@
       <mat-menu #settings="matMenu">
         <ng-container *ngIf="user?.id===room.createdBy.id">
           <button (click)="editRoomProp(room)" mat-menu-item>
-            Edit room
+            Settings
           </button>
           <button (click)="addRoomUser(room)" mat-menu-item>
             Add user
           </button>
           <button (click)="deleteRoom(room._id)" mat-menu-item>
             Delete room
+          </button>
+        </ng-container>
+        <ng-container *ngIf="user?.id!==room.createdBy.id">
+          <button (click)="showRoomInfo(room)" mat-menu-item>
+            Info
           </button>
         </ng-container>
         <button (click)="disLikeRoom(room._id)" mat-menu-item>

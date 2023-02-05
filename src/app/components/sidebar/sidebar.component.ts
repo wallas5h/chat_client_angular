@@ -16,6 +16,7 @@ import {
   Validators,
 } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "src/app/Material-Module";
 import { ChatRoutingModule } from "src/app/pages/chat/chat-routing.module";
@@ -27,6 +28,7 @@ import { UploadService } from "src/app/services/upload.service";
 import { roomResponseDto, roomTypes } from "src/app/types/room.dto";
 import { AddUserToRoompopupComponent } from "../add-user-to-roompopup/add-user-to-roompopup.component";
 import { EditroompopupComponent } from "../editroompopup/editroompopup.component";
+import { InfoRoomPopupComponent } from "../info-room-popup/info-room-popup.component";
 
 @Component({
   selector: "app-sidebar",
@@ -74,12 +76,10 @@ export class SidebarComponent implements OnInit, OnChanges {
     private authService: AuthService,
     private dialog: MatDialog,
     private ref: ChangeDetectorRef,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private _snackBar: MatSnackBar
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    // this.socketioService.setNumberOfNewMessages();
-    // this.newMessages = this.socketioService.getNumberOfNewMessages();
-    // console.log(this.newMessages);
     this.newMessages = this.socketioService.newMessages;
   }
 
@@ -89,13 +89,18 @@ export class SidebarComponent implements OnInit, OnChanges {
     this.socketioService.setNumberOfNewMessages();
     this.newMessages = this.socketioService.newMessages;
 
-    this.authService.getUsers().subscribe((res) => {
-      this.respData = res;
-      if (this.respData.users) {
-        this.members = this.respData.users;
-        // console.log(this.members);
-      }
-    });
+    this.authService
+      .getUsers()
+      .then((res) => {
+        if (res.data.users) {
+          this.members = res.data.users;
+        }
+      })
+      .catch((err) => {
+        this._snackBar.open("Server error, try later", "Ok", {
+          duration: 3000,
+        });
+      });
   }
 
   setRoomAddSearchOpt(value: string) {
@@ -103,13 +108,19 @@ export class SidebarComponent implements OnInit, OnChanges {
   }
 
   setRoomsData() {
-    this.chatService.getRooms().subscribe((res) => {
-      this.respData = res;
-      if (this.respData.rooms) {
-        this.rooms = this.respData.rooms;
-        this.roomsArrayLength = this.rooms.length;
-      }
-    });
+    this.chatService
+      .getRooms()
+      .then((res) => {
+        if (res.data.rooms) {
+          this.rooms = res.data.rooms;
+          this.roomsArrayLength = this.rooms.length;
+        }
+      })
+      .catch(() => {
+        this._snackBar.open("Server error, try later", "Ok", {
+          duration: 3000,
+        });
+      });
   }
 
   setCurrentRoom(room: roomResponseDto, isMemberRoom = false) {
@@ -168,15 +179,32 @@ export class SidebarComponent implements OnInit, OnChanges {
   }
 
   disLikeRoom(roomId: string) {
-    this.chatService.dislikeRoom(roomId);
-    this.setRoomsData();
-    this.ref.detectChanges();
+    if (confirm("Are you sure to remove this room from list? ")) {
+      this.chatService.dislikeRoom(roomId);
+      this.setRoomsData();
+      this.ref.detectChanges();
+    }
   }
 
   deleteRoom(roomId: string) {
-    this.chatService.deleteRoom(roomId);
-    this.setRoomsData();
-    this.ref.detectChanges();
+    if (confirm("Are you sure to delete this room? ")) {
+      this.chatService.deleteRoom(roomId);
+      this.setRoomsData();
+      this.ref.detectChanges();
+    }
+  }
+
+  showRoomInfo(room: roomResponseDto) {
+    let popup = this.dialog.open(InfoRoomPopupComponent, {
+      width: "300px",
+      data: {
+        room,
+      },
+    });
+
+    popup.afterClosed().subscribe(() => {
+      this.setRoomsData();
+    });
   }
 
   orderId(memberId: string) {
