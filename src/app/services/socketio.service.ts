@@ -3,7 +3,6 @@ import { io } from "socket.io-client";
 import { apiSocketUrl } from "src/config/api";
 
 export const socket = io(apiSocketUrl);
-// export const socket = io("http://localhost:3001");
 
 export interface Dictionary<Value> {
   [param: string]: Value;
@@ -31,11 +30,11 @@ export class SocketioService {
 
   getNumberOfNewMessages() {
     let messagesJson = localStorage.getItem("newMessages")!;
-    this.newMessages = JSON.parse(messagesJson);
-    return JSON.parse(messagesJson);
+    this.newMessages = JSON.parse(messagesJson) ?? {};
   }
 
   setNumberOfNewMessages() {
+    localStorage.setItem("newMessages", JSON.stringify(this.newMessages));
     socket.off("notifications").on("notifications", (room) => {
       if (this.newMessages[room]) {
         this.newMessages[room] += 1;
