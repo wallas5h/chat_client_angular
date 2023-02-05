@@ -10,10 +10,7 @@
       <mat-form-field appearance="fill">
         <mat-label>Change privacy:</mat-label>
         <mat-select formControlName="type">
-          <mat-option
-            *ngFor="let option of privacyOptions"
-            [value]="roomForm.value.type"
-          >
+          <mat-option *ngFor="let option of privacyOptions" [value]="option">
             {{option}}
           </mat-option>
         </mat-select>
