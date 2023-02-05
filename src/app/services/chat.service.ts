@@ -19,7 +19,7 @@ export class ChatService {
   ) {}
 
   getRooms() {
-    return this.http.get(apiUrl + "/rooms");
+    return axios.get(apiUrl + "/rooms");
   }
 
   async getMembers() {

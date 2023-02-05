@@ -87,7 +87,7 @@ export class AuthService {
   }
 
   getUsers() {
-    return this.http.get(`${this.apisUrl}`);
+    return axios.get(`${this.apisUrl}`);
   }
 
   getUserData() {
