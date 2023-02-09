@@ -11,6 +11,7 @@ import {
   registerUserDto,
   UserEntity,
 } from "../types/user";
+import { Dictionary, SocketioService } from "./socketio.service";
 
 @Injectable({
   providedIn: "root",
@@ -19,7 +20,8 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private route: Router,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private socketService: SocketioService
   ) {
     this.user = this.getUserData();
   }
@@ -100,6 +102,38 @@ export class AuthService {
     } else {
       return "";
     }
+  }
+
+  getUserNewMessages() {
+    let newMessages: Dictionary<number>;
+    axios
+      .get(`${this.apisUrl}/${authEndpoints.newMessages}`)
+      .then((res) => {
+        if (res.status === 200) {
+          newMessages = res.data.newMessages ?? {};
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        localStorage.setItem("newMessages", JSON.stringify(newMessages));
+      });
+  }
+
+  sendUserNewMessagesStatus() {
+    axios
+      .post(
+        `${this.apisUrl}/${authEndpoints.newMessages}`,
+        this.socketService.newMessages
+      )
+      .then((res) => {
+        if (res.status === 200) {
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   findUserByName(inputName: string) {
