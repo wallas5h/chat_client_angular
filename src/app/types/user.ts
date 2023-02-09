@@ -13,6 +13,7 @@ export enum authEndpoints {
   login = "login",
   logout = "logout",
   findUsers = "find",
+  newMessages = "messages",
 }
 
 export interface UserEntity {
