@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { AuthService } from "src/app/services/auth.service";
@@ -31,7 +31,7 @@ import { ChatRoutingModule } from "./chat-routing.module";
     ChatRoutingModule,
   ],
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
   respData: any;
 
   results: any | undefined;
@@ -46,11 +46,12 @@ export class ChatComponent implements OnInit {
     private ref: ChangeDetectorRef
   ) {}
 
+  ngOnDestroy(): void {
+    this.authService.sendUserNewMessagesStatus();
+  }
+
   async ngOnInit(): Promise<void> {
-    // socket.on("new-user", (payload) => {
-    //   console.log("działa chat service");
-    //   console.log(payload);
-    // });
+    this.authService.getUserNewMessages();
   }
 
   onPassRoomDetails(props: any) {
