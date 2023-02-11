@@ -81,14 +81,20 @@ export class SidebarComponent implements OnInit, OnChanges {
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     this.newMessages = this.socketioService.newMessages;
+    // this.authService.checkUserOnlineStatus();
+    this.setMembersData();
   }
 
   async ngOnInit(): Promise<void> {
     this.setRoomsData();
+    // this.authService.checkUserOnlineStatus();
+    this.setMembersData();
     this.socketioService.getNumberOfNewMessages();
     this.socketioService.setNumberOfNewMessages();
     this.newMessages = this.socketioService.newMessages;
+  }
 
+  setMembersData() {
     this.authService
       .getUsers()
       .then((res) => {
@@ -123,15 +129,16 @@ export class SidebarComponent implements OnInit, OnChanges {
       });
   }
 
-  setCurrentRoom(room: roomResponseDto, isMemberRoom = false) {
+  setCurrentRoom(room: roomResponseDto, isRoomTypeMember = false) {
     this.passRoomDetails.emit(room);
-    if (isMemberRoom) {
+    if (isRoomTypeMember) {
       this.socketioService.deleteNotification(
         this.uploadService.orderId(room._id, String(this.user?.id))
       );
     } else {
       this.socketioService.deleteNotification(room._id);
     }
+    this.authService.sendUserNewMessagesStatus();
   }
 
   editRoomProp(room: roomResponseDto) {
