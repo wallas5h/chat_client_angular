@@ -102,10 +102,14 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
       axios
         .get(`${apiUrl}/rooms/${roomId}`)
         .then((res) => {
-          this.room = res.data.room;
-          this.currentRoomId = this.room._id;
+          if (res.status === 200) {
+            this.room = res.data.room;
+            this.currentRoomId = this.room._id;
 
-          this.joinRoom(this.room._id);
+            this.joinRoom(this.room._id);
+          } else {
+            this.room = {} as roomResponseDto;
+          }
         })
         .catch(() => {
           console.log("error");
@@ -115,13 +119,17 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
       axios
         .get(`${apiUrl}/users/${memberId}`)
         .then((res) => {
-          this.privMsgMember = res.data.user[0];
-          const roomIdMember = this.uploadService.orderId(
-            String(this.user?.id),
-            this.privMsgMember._id
-          );
-          this.joinRoom(roomIdMember);
-          this.currentRoomId = roomIdMember;
+          if (res.status === 200) {
+            this.privMsgMember = res.data.user[0];
+            const roomIdMember = this.uploadService.orderId(
+              String(this.user?.id),
+              this.privMsgMember._id
+            );
+            this.joinRoom(roomIdMember);
+            this.currentRoomId = roomIdMember;
+          } else {
+            this.privMsgMember = {} as UserFindResponse;
+          }
         })
         .catch(() => {
           console.log("error");
@@ -171,8 +179,14 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
   getMessagesFromRoom() {
     // this.messages = this.socketService.getMessagesFromRoom();
     socket.off("room-messages").on("room-messages", (roomMessages) => {
-      if (roomMessages[0].messagesByDate[0].to === this.currentRoomId) {
+      if (
+        roomMessages.length &&
+        roomMessages[0].messagesByDate[0].to === this.currentRoomId
+      ) {
         this.messages = roomMessages;
+      }
+      if (!roomMessages.length) {
+        this.messages = [];
       }
     });
   }
