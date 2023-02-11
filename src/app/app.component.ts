@@ -19,16 +19,17 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(): void {
     this.user = this.authService.getUserData();
-    console.log(this.user);
   }
 
   ngOnInit() {
     this.socketioService.setupSocketConnection();
-    // this.user = this.authService.getUserData();
+    this.authService.getUserNewMessages();
+    this.user = this.authService.getUserData();
   }
 
   ngOnDestroy(): void {
     this.socketioService.disconnect();
+
     // localStorage.clear();
   }
 }
