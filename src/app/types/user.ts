@@ -14,6 +14,7 @@ export enum authEndpoints {
   logout = "logout",
   findUsers = "find",
   newMessages = "messages",
+  status = "status",
 }
 
 export interface UserEntity {
@@ -31,4 +32,9 @@ export interface UserFindResponse {
   image: string;
   status: string;
   newMessages?: string;
+}
+
+export enum UserStatus {
+  online = "online",
+  offline = "offline",
 }
