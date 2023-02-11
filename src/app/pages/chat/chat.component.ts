@@ -48,9 +48,11 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.authService.sendUserNewMessagesStatus();
+    this.authService.setUserOnlineStatus(false);
   }
 
   async ngOnInit(): Promise<void> {
+    this.authService.checkUserOnlineStatus();
     this.authService.getUserNewMessages();
   }
 
