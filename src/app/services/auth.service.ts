@@ -10,8 +10,9 @@ import {
   loginUserDto,
   registerUserDto,
   UserEntity,
+  UserStatus,
 } from "../types/user";
-import { Dictionary, SocketioService } from "./socketio.service";
+import { Dictionary, socket, SocketioService } from "./socketio.service";
 
 @Injectable({
   providedIn: "root",
@@ -88,6 +89,19 @@ export class AuthService {
       });
   }
 
+  setUserOnlineStatus(status: boolean) {
+    const userStatus = {
+      status: status ? UserStatus.online : UserStatus.offline,
+    };
+
+    const data = {
+      userId: this.user?.id,
+      status: userStatus.status,
+    };
+
+    socket.emit("user-status", data);
+  }
+
   getUsers() {
     return axios.get(`${this.apisUrl}`);
   }
@@ -106,6 +120,9 @@ export class AuthService {
 
   getUserNewMessages() {
     let newMessages: Dictionary<number>;
+
+    if (!this.user) return;
+
     axios
       .get(`${this.apisUrl}/${authEndpoints.newMessages}`)
       .then((res) => {
@@ -122,6 +139,8 @@ export class AuthService {
   }
 
   sendUserNewMessagesStatus() {
+    if (!this.user) return;
+
     axios
       .post(
         `${this.apisUrl}/${authEndpoints.newMessages}`,
@@ -134,6 +153,26 @@ export class AuthService {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  checkUserOnlineStatus() {
+    if (!this.user) return;
+
+    window.addEventListener("load", () => {
+      this.setUserOnlineStatus(navigator.onLine);
+    });
+    window.addEventListener("online", () => {
+      this.setUserOnlineStatus(true);
+    });
+    window.addEventListener("offline", () => {
+      this.setUserOnlineStatus(false);
+    });
+  }
+
+  sendUserOfflineStatusOnCloseTab() {
+    window.addEventListener("beforeunload", (e) => {
+      this.setUserOnlineStatus(false);
+    });
   }
 
   findUserByName(inputName: string) {
