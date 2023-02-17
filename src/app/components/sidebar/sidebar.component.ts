@@ -81,13 +81,11 @@ export class SidebarComponent implements OnInit, OnChanges {
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     this.newMessages = this.socketioService.newMessages;
-    // this.authService.checkUserOnlineStatus();
     this.setMembersData();
   }
 
   async ngOnInit(): Promise<void> {
     this.setRoomsData();
-    // this.authService.checkUserOnlineStatus();
     this.setMembersData();
     this.socketioService.getNumberOfNewMessages();
     this.socketioService.setNumberOfNewMessages();
