@@ -1,28 +1,39 @@
-<div class="flex items-center justify-between w-screen bg-slate-300 py-2 px-4">
-  <span class="cursor-pointer px-2" [routerLink]="['/']">ChatMe</span>
+<div class="flex items-center justify-between w-screen bg-[#333] px-4">
+  <a href="/" [routerLink]="['/']" class="p-4 text-white text-[1.2rem]">
+    <span class="text-[#ffa500]">C</span>hat<span class="text-[#ffa500]">M</span
+    >e</a
+  >
+  <!-- <span class="cursor-pointer py-4 px-4" [routerLink]="['/']">ChatMe</span> -->
   <span class="example-spacer"></span>
+
   <div class="flex row-auto items-center justify-between">
     <ng-container *ngIf="isAuthenticated">
-      <div class="flex items-center">
+      <span
+        class="cursor-pointer py-4 px-4 mr-6"
+        (click)="checkUserOnlineStatus()"
+        [routerLink]="['../chat']"
+        >Chat</span
+      >
+      <div class="flex items-center cursor-pointer" [matMenuTriggerFor]="menu">
         <img
           src="{{user?.image}}"
           alt="{{user?.name}}"
-          class="w-[20px] h-[20px] rounded-full mr-4"
+          class="w-[20px] h-[20px] rounded-full mr-4 my-auto"
         />
-        <p class="flex items-center">{{user?.name | titlecase}}</p>
+        <span class="flex my-auto">{{user?.name | titlecase}}</span>
+        <button mat-button>
+          <mat-icon>expand_more</mat-icon>
+        </button>
       </div>
-      <button mat-button [matMenuTriggerFor]="menu">
-        <mat-icon>expand_more</mat-icon>
-      </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item [routerLink]="['../chat']">Chat</button>
+        <!-- <button mat-menu-item [routerLink]="['../chat']">Chat</button> -->
         <button mat-menu-item (click)="logout()">Logout</button>
       </mat-menu>
     </ng-container>
 
     <ng-container *ngIf="!isAuthenticated">
       <button mat-button [matMenuTriggerFor]="menu">
-        <mat-icon>menu</mat-icon>
+        <mat-icon class="text-white">menu</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item [routerLink]="['../register']">Sign up</button>
