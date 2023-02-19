@@ -8,7 +8,7 @@ import { UserEntity } from "src/app/types/user";
   styles: [],
 })
 export class HeaderComponent implements OnInit, OnChanges, DoCheck {
-  constructor(private authService: AuthService) {}
+  constructor(public authService: AuthService) {}
 
   isAuthenticated: Boolean = false;
   user: UserEntity | undefined;
@@ -20,6 +20,10 @@ export class HeaderComponent implements OnInit, OnChanges, DoCheck {
   ngOnChanges(): void {}
 
   ngOnInit(): void {}
+
+  checkUserOnlineStatus() {
+    this.authService.setUserOnlineStatus(true);
+  }
 
   logout() {
     this.authService.logout();
