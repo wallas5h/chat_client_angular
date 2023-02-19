@@ -3,6 +3,9 @@ import { io } from "socket.io-client";
 import { apiSocketUrl } from "src/config/api";
 
 export const socket = io(apiSocketUrl);
+// export const socket = io(apiSocketUrl, {
+//   query: { token: localStorage.getItem("token") },
+// });
 
 export interface Dictionary<Value> {
   [param: string]: Value;
