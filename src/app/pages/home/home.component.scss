@@ -1,5 +1,5 @@
 $orange: #ffa500;
-$gray: #333;
+$gray: #4d4d4d;
 $phone-width: 264px;
 $phone-height: 533px;
 $phone-border-radius: 36px;
@@ -43,28 +43,62 @@ html {
 
 
   .title {
-    @extend %flex-center;
+    // @extend %flex-center;
+    align-items: center;
     flex-wrap: wrap;
-    height: 100%;
+    height: $phone-height;
+    // height: 100%;
 
     h3 {
+      padding: 2rem;
       flex-basis: 100%;
-      font-size: 1.8rem;
-      // color: $orange;
-      text-transform: uppercase;
+      font-size: 3.0rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      line-height: 10rem;
+      color: lighten($color: $gray, $amount: 10%);
+      // text-transform: uppercase;
       text-shadow: 0 .3rem .5rem rgba(0, 0, 0, .1);
       text-align: center;
+
+      .orange {
+        color: darken($color: $orange, $amount: 5%);
+      }
     }
+
+    .animated--text {
+      @extend %flex-center;
+      margin-bottom: 4rem;
+      background: lighten($color: $orange, $amount: 5%);
+      border-radius: 4rem;
+      flex-basis: 100%;
+      width: 350px;
+      height: 4rem;
+      overflow: hidden;
+      list-style: none;
+      position: relative;
+    }
+
+    .single--text {
+      font-size: 1.5rem;
+      line-height: 2rem;
+      animation: animation-one 4s infinite;
+
+    }
+
+    button {
+      display: block;
+      margin: auto;
+      padding: 5px 2rem;
+      background-color: darken($color: $gray, $amount: 10%);
+      border-radius: 1rem;
+      font-size: 1.5rem;
+      line-height: 2.5rem;
+      color: #fff;
+    }
+
   }
 
-  .image {
-    img {
-      // border-radius: 2.5rem;
-      border-top-left-radius: 2.5rem;
-      border-top-right-radius: 2.5rem;
-      border-bottom-left-radius: 2.5rem;
-    }
-  }
 }
 
 .phone__wrapper {
@@ -139,5 +173,35 @@ html {
     span {
       color: $orange;
     }
+  }
+}
+
+
+@keyframes animation-one {
+
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+
+
+  33.3% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+
+  66.6% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: translate3d(0, -100%, 0);
+    opacity: 0;
   }
 }
