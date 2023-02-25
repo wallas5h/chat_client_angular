@@ -1,0 +1,121 @@
+$orange: #ffa500;
+$gray: #4d4d4d;
+$phone-height: 533px;
+
+%flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.phone-content-wrapper {
+  position: relative;
+  height: $phone-height - 20px;
+}
+
+.messages-phone-wrapper {
+  padding: 0 0.5rem;
+  font-size: 0.8rem;
+}
+
+.messages-date {
+  width: 100%;
+  margin-top: 0.5rem;
+  @extend %flex-center;
+
+  p {
+    width: 150px;
+    @extend %flex-center;
+    padding: 0.4rem;
+    border-radius: 0.5rem;
+    background-color: rgb(190 242 100);
+    font-size: 0.85rem;
+  }
+}
+
+.messages-container {
+  display: flex;
+  flex-direction: column;
+
+  .message-item {
+    display: flex;
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+    justify-content: flex-start;
+
+    &--man {
+      justify-content: flex-end;
+    }
+
+    &--text {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      min-width: 60px;
+      word-break: break-all;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.5rem;
+
+      &--man {
+        margin-left: auto;
+        background-color: rgb(191 219 254);
+      }
+
+      &--woman {
+
+        background-color: #e6e3d8;
+      }
+    }
+
+    &--time {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 0.7rem;
+
+      &--woman {
+        margin-right: auto;
+        margin-left: 20%;
+      }
+
+      &--man {
+        margin-left: auto;
+      }
+    }
+  }
+}
+
+.form-input {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-evenly;
+  // margin-right: 0.5rem;
+}
+
+.text-input {
+  display: block;
+  width: 80%;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  padding-left: 0.5rem;
+  border: 1px solid lighten($gray, 30%);
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.button {
+  width: 2rem;
+  height: 2rem;
+  @extend %flex-center;
+  padding: 0.25rem;
+  background-color: $orange;
+  color: #fff;
+  border-radius: 25%;
+
+  &--click {
+    background-color: $gray ;
+  }
+}
