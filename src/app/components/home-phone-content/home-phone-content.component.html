@@ -1,0 +1,38 @@
+<div class="phone-content-wrapper">
+  <div class="messages-phone-wrapper">
+    <div class="messages-date">
+      <p class="">
+        {{getDate()}}
+      </p>
+    </div>
+    <ng-container *ngFor="let message of conversationArray">
+      <div class="messages-container">
+        <div
+          class="message-item"
+          [ngClass]="{ 'message-item--man': message.user==='man' }"
+        >
+          <div
+            class="message-item--text"
+            [ngClass]="{ 'message-item--text--man': message.user==='man', 
+                'message-item--text--woman': message.user!=='man'}"
+          >
+            {{message.text}}
+          </div>
+        </div>
+        <div
+          class="message-item--time flex justify-end text-xs mt-1"
+          [ngClass]="{ 'message-item--time--woman ': message.user!=='man','message-item--time--man': message.user==='man' }"
+        >
+          {{message.time}}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="form-input">
+    <p class="text-input"></p>
+    <button class="button">
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+</div>

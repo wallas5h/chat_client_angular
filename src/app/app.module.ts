@@ -14,9 +14,10 @@ import { ChatService } from "./services/chat.service";
 import { SocketioService } from "./services/socketio.service";
 import { TokenInterceptorService } from "./services/token-interceptor.service";
 import { UploadService } from "./services/upload.service";
+import { HomePhoneContentComponent } from './components/home-phone-content/home-phone-content.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, HomeComponent],
+  declarations: [AppComponent, HeaderComponent, HomeComponent, HomePhoneContentComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
