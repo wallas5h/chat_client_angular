@@ -9,7 +9,7 @@
   <div class="flex row-auto items-center justify-between">
     <ng-container *ngIf="isAuthenticated">
       <span
-        class="cursor-pointer py-4 px-4 mr-6"
+        class="cursor-pointer py-4 px-4 mr-6 text-slate-100"
         (click)="checkUserOnlineStatus()"
         [routerLink]="['../chat']"
         >Chat</span
@@ -20,9 +20,11 @@
           alt="{{user?.name}}"
           class="w-[20px] h-[20px] rounded-full mr-4 my-auto"
         />
-        <span class="flex my-auto">{{user?.name | titlecase}}</span>
+        <span class="flex my-auto text-slate-100"
+          >{{user?.name | titlecase}}</span
+        >
         <button mat-button>
-          <mat-icon>expand_more</mat-icon>
+          <mat-icon [ngStyle]="{'color':'#fff'}">expand_more</mat-icon>
         </button>
       </div>
       <mat-menu #menu="matMenu">
@@ -31,9 +33,16 @@
       </mat-menu>
     </ng-container>
 
-    <ng-container *ngIf="!isAuthenticated">
-      <button mat-button [matMenuTriggerFor]="menu">
-        <mat-icon class="text-white">menu</mat-icon>
+    <ng-container *ngIf="!isAuthenticated" class="mr-6">
+      <button
+        mat-button
+        [matMenuTriggerFor]="menu"
+        class="flex items-center justify-center"
+        [ngStyle]="{'margin-right': '20px'}"
+      >
+        <i
+          class="fa-solid fa-bars inline-block select-none text-white text-[30px]"
+        ></i>
       </button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item [routerLink]="['../register']">Sign up</button>
