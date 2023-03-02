@@ -16,7 +16,7 @@ import { ChatRoutingModule } from "./chat-routing.module";
   selector: "app-chat",
   standalone: true,
   templateUrl: "./chat.component.html",
-  styles: [],
+  styleUrls: ["./chat.styles.scss"],
   imports: [
     CommonModule,
     MaterialModule,
@@ -32,11 +32,9 @@ import { ChatRoutingModule } from "./chat-routing.module";
   ],
 })
 export class ChatComponent implements OnInit, OnDestroy {
-  respData: any;
-
-  results: any | undefined;
   currentRoom: roomResponseDto = {} as roomResponseDto;
   messageMember: UserFindResponse = {} as UserFindResponse;
+  arrowRight: boolean = true;
 
   constructor(
     private chatService: ChatService,
@@ -64,5 +62,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.currentRoom = {} as roomResponseDto;
       this.messageMember = props;
     }
+  }
+
+  onClickArrow() {
+    this.arrowRight = !this.arrowRight;
   }
 }
