@@ -1,12 +1,25 @@
-<mat-drawer-container class="example-container h-screen mt-2">
-  <mat-drawer mode="side" opened class="">
+<div class="chat--wrapper">
+  <div
+    class="sidebar--wrapper"
+    [ngClass]="{'sidebar--wrapper-visible': !arrowRight}"
+  >
     <app-sidebar (passRoomDetails)="onPassRoomDetails($event)"></app-sidebar>
-  </mat-drawer>
+    <div class="sidebar--arrow" (click)="onClickArrow()">
+      <i
+        class="fa-solid"
+        [ngClass]="{'fa-caret-right': arrowRight, 'fa-caret-left': !arrowRight}"
+      ></i>
+    </div>
+    <span class="sidebar--arrow--hover-text">
+      <i *ngIf="arrowRight">Show Rooms</i>
+      <i *ngIf="!arrowRight">Hide Rooms</i>
+    </span>
+  </div>
 
-  <mat-drawer-content>
+  <div class="messages--form--wrapper">
     <app-message-form
       [room]="currentRoom"
       [privMsgMember]="messageMember"
     ></app-message-form>
-  </mat-drawer-content>
-</mat-drawer-container>
+  </div>
+</div>
