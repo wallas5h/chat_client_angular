@@ -137,6 +137,7 @@ export class SidebarComponent implements OnInit, OnChanges {
       this.socketioService.deleteNotification(room._id);
     }
     this.authService.sendUserNewMessagesStatus();
+    this.ChatComponent.arrowRight = true;
   }
 
   editRoomProp(room: roomResponseDto) {
