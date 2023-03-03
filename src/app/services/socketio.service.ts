@@ -16,10 +16,27 @@ export interface Dictionary<Value> {
 })
 export class SocketioService {
   socket: any;
-  newMessages: Dictionary<number> =
-    JSON.parse(localStorage.getItem("newMessages")!) ?? {};
 
-  constructor() {}
+  newMessages: Dictionary<number> = {} as Dictionary<number>;
+  sumOfNewMessages: number = 0;
+
+  constructor() {
+    try {
+      this.newMessages = JSON.parse(localStorage.getItem("newMessages") ?? "");
+    } catch (error) {
+      this.newMessages = {} as Dictionary<number>;
+    }
+    this.setSumOfNewMessages();
+  }
+
+  setSumOfNewMessages() {
+    const objectValues = Object.values(this.newMessages);
+    this.sumOfNewMessages = objectValues.reduce((prev, curr) => {
+      return Number(prev) + Number(curr);
+    }, 0);
+
+    // console.log(this.sumOfNewMessages);
+  }
 
   setupSocketConnection() {
     this.socket = io(apiSocketUrl);
@@ -46,6 +63,7 @@ export class SocketioService {
         this.newMessages[room] = 1;
         localStorage.setItem("newMessages", JSON.stringify(this.newMessages));
       }
+      this.setSumOfNewMessages();
     });
   }
 

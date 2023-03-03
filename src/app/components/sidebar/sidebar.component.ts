@@ -138,6 +138,7 @@ export class SidebarComponent implements OnInit, OnChanges {
     }
     this.authService.sendUserNewMessagesStatus();
     this.ChatComponent.arrowRight = true;
+    this.socketioService.setSumOfNewMessages();
   }
 
   editRoomProp(room: roomResponseDto) {
