@@ -1,5 +1,6 @@
 import { Component, DoCheck, OnChanges, OnInit } from "@angular/core";
 import { AuthService } from "src/app/services/auth.service";
+import { SocketioService } from "src/app/services/socketio.service";
 import { UserEntity } from "src/app/types/user";
 
 @Component({
@@ -8,7 +9,10 @@ import { UserEntity } from "src/app/types/user";
   styles: [],
 })
 export class HeaderComponent implements OnInit, OnChanges, DoCheck {
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    public socketService: SocketioService
+  ) {}
 
   isAuthenticated: Boolean = false;
   user: UserEntity | undefined;
