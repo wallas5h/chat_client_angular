@@ -5,6 +5,7 @@
   min-height: 100vh - 10vh;
   width: 100vw;
   overflow-x: hidden;
+  background: url(../../../assets/banner-bg.jpg);
 
 
   @media (max-width:800px) {
@@ -65,7 +66,7 @@
 
     i {
       font-size: 40px;
-      color: $gray;
+      color: darken($orange, 2%);
     }
 
 
