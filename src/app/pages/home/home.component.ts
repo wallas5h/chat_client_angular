@@ -3,8 +3,8 @@ import { Component, OnInit } from "@angular/core";
 const firstTextSlider = [
   "Are you bored?",
   "Do you feel lonely?",
-  "Text with someone interesting!",
-  "Meet new people...",
+  "Meet new people :)",
+  "Let's text with someone!",
 ];
 
 @Component({
