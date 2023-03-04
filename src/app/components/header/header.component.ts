@@ -6,7 +6,7 @@ import { UserEntity } from "src/app/types/user";
 @Component({
   selector: "app-header",
   templateUrl: "./header.component.html",
-  styles: [],
+  styleUrls: ["./header.scss"],
 })
 export class HeaderComponent implements OnInit, OnChanges, DoCheck {
   constructor(
