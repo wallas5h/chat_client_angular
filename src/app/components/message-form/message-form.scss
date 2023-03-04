@@ -1,0 +1,40 @@
+@import "../../../variables";
+
+
+.fa-message-wrapper {
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: ;
+  // align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+}
+
+.fa-message-icon {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin: 4rem auto;
+
+  i {
+
+    font-size: 4rem;
+    color: $gray;
+  }
+}
+
+
+
+.fa-message-text {
+  // flex-basis: 100%;
+  display: block;
+  text-align: center;
+  font-size: 3rem;
+  color: $gray;
+
+  @media (max-width:800px) {
+    font-size: 2rem;
+  }
+}
