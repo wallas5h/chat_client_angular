@@ -41,6 +41,7 @@ import { UserFindResponse } from "src/app/types/user";
     ChatRoutingModule,
   ],
   templateUrl: "./message-form.component.html",
+  styleUrls: ["./message-form.scss"],
   styles: [],
 })
 export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
