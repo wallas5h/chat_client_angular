@@ -8,12 +8,21 @@
 
   <div class="flex row-auto items-center justify-between">
     <ng-container *ngIf="isAuthenticated">
-      <span
-        class="cursor-pointer py-4 px-4 mr-6 text-slate-100"
-        (click)="checkUserOnlineStatus()"
-        [routerLink]="['../chat']"
-        >Chat</span
-      >
+      <div class="chat-link">
+        <span
+          class="chat-link--text"
+          (click)="checkUserOnlineStatus()"
+          [routerLink]="['../chat']"
+          >Chat
+        </span>
+        <span
+          class="message-badge-info"
+          [ngClass]="{'hidden': !this.socketService.sumOfNewMessages}"
+        >
+          {{this.socketService.sumOfNewMessages}}
+        </span>
+      </div>
+
       <div class="flex items-center cursor-pointer" [matMenuTriggerFor]="menu">
         <img
           src="{{user?.image}}"
