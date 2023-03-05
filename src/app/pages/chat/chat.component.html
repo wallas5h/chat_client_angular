@@ -3,6 +3,10 @@
     class="sidebar--wrapper"
     [ngClass]="{'sidebar--wrapper-visible': !hiddenSidebar}"
   >
+    <div
+      class="blur-background"
+      [ngClass]="{'blur-background-visible': !hiddenSidebar}"
+    ></div>
     <app-sidebar (passRoomDetails)="onPassRoomDetails($event)"></app-sidebar>
     <div
       class="sidebar--arrow"

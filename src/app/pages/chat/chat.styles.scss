@@ -7,13 +7,10 @@
   overflow-x: hidden;
   background: url(../../../assets/banner-bg.jpg);
 
-
   @media (max-width:800px) {
     position: relative;
   }
 }
-
-
 
 .sidebar--wrapper {
   width: 285px;
@@ -32,6 +29,24 @@
 
   &-visible {
     transform: translate3d(0, 0, 0);
+  }
+
+  .blur-background {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 90vh;
+    background-color: #fff;
+    // filter: blur(8px);
+    z-index: -1;
+
+    &-visible {
+      @media (max-width:450px) and (orientation: portrait) {
+        display: block;
+      }
+    }
   }
 
   .sidebar--arrow {
