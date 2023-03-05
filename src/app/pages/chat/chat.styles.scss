@@ -16,7 +16,7 @@
 
 
 .sidebar--wrapper {
-  width: 250px;
+  width: 285px;
   position: relative;
   z-index: 2;
 
@@ -25,17 +25,22 @@
     transform: translate3d(-100%, 0, 0);
   }
 
+  @media (max-width:800px) and (orientation: portrait) {
+    width: 320px;
+  }
+
   &-visible {
     transform: translate3d(0, 0, 0);
   }
 
   .sidebar--arrow {
-    width: 30px;
-    height: 60px;
+    width: 35px;
+    // height: 60px;
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: -30px;
+    top: 5px;
+    // top: 50%;
+    // transform: translateY(-50%);
+    right: -29px;
     z-index: 2;
     background-color: transparent;
 
@@ -43,6 +48,7 @@
     border-bottom-right-radius: 10px;
 
     display: none;
+    cursor: pointer;
 
     @media (max-width:800px) {
       display: flex;
@@ -50,14 +56,10 @@
       justify-content: center;
     }
 
-    cursor: pointer;
-
     &:hover {
       i {
         color: #ccc;
       }
-
-
     }
 
     &:hover+.sidebar--arrow--hover-text {
@@ -66,7 +68,16 @@
 
     i {
       font-size: 40px;
-      color: darken($orange, 2%);
+      color: darken($gray, 2%);
+    }
+
+    &-bgc {
+      top: 0;
+      height: 100%;
+      padding: 1px;
+      background-color: #fff;
+      align-items: start;
+      box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.3);
     }
 
 
@@ -76,7 +87,8 @@
       background-color: $gray;
       border-radius: 0.5rem;
       position: absolute;
-      top: 50%;
+      top: 20px;
+      // top: 50%;
       left: 115%;
       transform: translateY(-50%);
       white-space: nowrap;
