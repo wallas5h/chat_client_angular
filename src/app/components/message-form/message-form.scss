@@ -2,10 +2,6 @@
 
 
 .fa-message-wrapper {
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: ;
-  // align-items: center;
   flex-wrap: wrap;
   width: 100%;
   height: 100%;
@@ -28,7 +24,6 @@
 
 
 .fa-message-text {
-  // flex-basis: 100%;
   display: block;
   text-align: center;
   font-size: 3rem;
@@ -37,4 +32,107 @@
   @media (max-width:800px) {
     font-size: 2rem;
   }
+}
+
+.btn-send-msg {
+  display: block;
+  background-color: $orange;
+  padding: 0.5rem 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: lighten($color: $gray, $amount: 0%);
+    color: #fff;
+  }
+
+  @media (max-width:450px) and (orientation:portrait) {
+    padding: 0.25rem 0.5rem;
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+  }
+
+  .btn-send-desktop {
+    display: none;
+    font-style: italic;
+    font-weight: 600;
+
+    @media (min-width:800px) {
+      display: block;
+    }
+  }
+
+  .btn-send-mobile {
+    display: none;
+    color: #fff;
+
+    @media (max-width:800px) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+.upload-icons-wrapper {
+  display: none;
+  transition: 0.3 cubic-bezier(0.215, 0.610, 0.355, 1);
+
+  // @media (min-width:800px) {}
+
+  &-visible {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 0 0.5rem;
+    color: darken($orange, 5%);
+
+    div label {
+      font-size: 25px;
+      cursor: pointer;
+    }
+  }
+
+}
+
+.caret-icon {
+  display: none;
+
+  &-visible {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: $orange;
+    font-size: 25px;
+    color: #fff;
+    cursor: pointer;
+  }
+}
+
+.form-input {
+  width: 50%;
+  padding: 0.75rem 0.5rem;
+  margin: 0.5rem;
+  background-color: #ddd;
+  font-size: 0.8rem;
+
+  @media (min-width:800px) {
+    width: 70%;
+  }
+
+  &:focus {
+    width: 90%;
+  }
+
 }
