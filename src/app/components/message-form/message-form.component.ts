@@ -61,6 +61,8 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
   intervalId: any;
   logNb: number = 0;
 
+  showUploadIcons: boolean = true;
+
   messageForm = new FormGroup({
     newMessage: new FormControl("", Validators.required),
   });
@@ -325,5 +327,10 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
 
   onMessageHover(value: boolean) {
     this.isMessageHover = value;
+  }
+
+  changeShowUploadIcons() {
+    this.showUploadIcons = !this.showUploadIcons;
+    console.log("działa");
   }
 }
