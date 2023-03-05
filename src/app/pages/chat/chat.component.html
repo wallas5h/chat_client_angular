@@ -7,9 +7,9 @@
     <div
       class="sidebar--arrow"
       [ngClass]="{'sidebar--arrow-bgc': !hiddenSidebar}"
+      (click)="onClickArrow()"
     >
       <i
-        (click)="onClickArrow()"
         class="fa-solid"
         [ngClass]="{' fa-caret-right': hiddenSidebar, ' fa-regular fa-xmark': !hiddenSidebar}"
       ></i>
