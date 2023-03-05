@@ -1,7 +1,52 @@
-<mat-expansion-panel>
+<mat-expansion-panel [expanded]="true">
   <mat-expansion-panel-header>
     <mat-panel-title>
-      Available rooms
+      Members
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <mat-selection-list
+    [multiple]="false"
+    [multiple]="false"
+    [ngClass]="{'overflow-y-scroll':members.length>3}"
+    class="h-max-[20vh]"
+  >
+    <div *ngFor="let member of members" class="flex items-center">
+      <mat-list-option
+        (click)="setCurrentRoom(member,true)"
+        [value]="member"
+        [disabled]="user?.id===member._id"
+        [routerLink]="['room']"
+        [queryParams]="{member:member._id }"
+      >
+        <button
+          class="flex justify-start ml-2 items-center"
+          [disabled]="user?.id===member._id"
+        >
+          <span
+            class="flex w-2 h-2 rounded bg-red-300 mr-2"
+            [ngClass]="{'bg-green-300': member.status==='online' }"
+          ></span>
+          {{member.name | titlecase}}
+          <span *ngIf="user?.id===member._id" class="ml-2">(You)</span>
+        </button>
+      </mat-list-option>
+      <!-- new messages alert-->
+      <span
+        class="block ml-3 rounded-full w-[25px] h-[20px] bg-[#ffa500] text-sm text-center"
+        [ngClass]="{'hidden': !this.socketioService.newMessages[orderId(member._id)]}"
+      >
+        {{this.socketioService.newMessages[orderId(member._id)]}}
+      </span>
+    </div>
+  </mat-selection-list>
+</mat-expansion-panel>
+
+<!-- Extra chats -->
+<mat-expansion-panel [expanded]="rooms.length>0? true: false">
+  <mat-expansion-panel-header style="background-color: #4d4d4d; color: #fff;">
+    <mat-panel-title style="color: #fff;">
+      Extra chats
     </mat-panel-title>
   </mat-expansion-panel-header>
 
@@ -18,9 +63,6 @@
         [queryParams]="{room: room._id}"
       >
         <div class="flex row-auto justify-between">
-          <!-- <a [routerLink]="['room']" [queryParams]="{room: room._id}"
-            >{{room.name}}</a> -->
-
           <button class="flex justify-between mr-5">
             <span>{{room.name}}</span>
           </button>
@@ -29,7 +71,7 @@
 
       <!-- new messages alert-->
       <span
-        class="block ml-3 rounded-full w-[25px] h-[20px] bg-green-400 text-sm text-center"
+        class="block ml-3 rounded-full w-[25px] h-[20px] bg-[#ffa500] text-sm text-center"
         [ngClass]="{'hidden': !this.socketioService.newMessages[room._id] }"
       >
         {{this.socketioService.newMessages[room._id]}}
@@ -67,9 +109,12 @@
       </mat-menu>
     </div>
   </mat-selection-list>
-  <div class="flex items-center">
+  <div class="flex items-center justify-evenly">
     <mat-expansion-panel hideToggle>
-      <mat-expansion-panel-header>
+      <mat-expansion-panel-header
+        style="display: block; width: 100%;"
+        class="w-full"
+      >
         <mat-panel-title class="flex items-center justify-evenly">
           <div
             (click)="setRoomAddSearchOpt('add')"
@@ -145,48 +190,4 @@
       </ng-container>
     </mat-expansion-panel>
   </div>
-</mat-expansion-panel>
-
-<mat-expansion-panel [expanded]="true">
-  <mat-expansion-panel-header>
-    <mat-panel-title>
-      Members
-    </mat-panel-title>
-  </mat-expansion-panel-header>
-
-  <mat-selection-list
-    [multiple]="false"
-    [multiple]="false"
-    [ngClass]="{'overflow-y-scroll':members.length>3}"
-    class="h-max-[20vh]"
-  >
-    <div *ngFor="let member of members" class="flex items-center">
-      <mat-list-option
-        (click)="setCurrentRoom(member,true)"
-        [value]="member"
-        [disabled]="user?.id===member._id"
-        [routerLink]="['room']"
-        [queryParams]="{member:member._id }"
-      >
-        <button
-          class="flex justify-start ml-2 items-center"
-          [disabled]="user?.id===member._id"
-        >
-          <span
-            class="flex w-2 h-2 rounded bg-red-300 mr-2"
-            [ngClass]="{'bg-green-300': member.status==='online' }"
-          ></span>
-          {{member.name | titlecase}}
-          <span *ngIf="user?.id===member._id" class="ml-2">(You)</span>
-        </button>
-      </mat-list-option>
-      <!-- new messages alert-->
-      <span
-        class="block ml-3 rounded-full w-[25px] h-[20px] bg-green-400 text-sm text-center"
-        [ngClass]="{'hidden': !this.socketioService.newMessages[orderId(member._id)]}"
-      >
-        {{this.socketioService.newMessages[orderId(member._id)]}}
-      </span>
-    </div>
-  </mat-selection-list>
 </mat-expansion-panel>
