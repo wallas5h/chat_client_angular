@@ -34,7 +34,7 @@ import { ChatRoutingModule } from "./chat-routing.module";
 export class ChatComponent implements OnInit, OnDestroy {
   currentRoom: roomResponseDto = {} as roomResponseDto;
   messageMember: UserFindResponse = {} as UserFindResponse;
-  arrowRight: boolean = true;
+  hiddenSidebar: boolean = false;
 
   constructor(
     private chatService: ChatService,
@@ -65,6 +65,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   onClickArrow() {
-    this.arrowRight = !this.arrowRight;
+    this.hiddenSidebar = !this.hiddenSidebar;
   }
 }
