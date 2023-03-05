@@ -1,18 +1,22 @@
 <div class="chat--wrapper">
   <div
     class="sidebar--wrapper"
-    [ngClass]="{'sidebar--wrapper-visible': !arrowRight}"
+    [ngClass]="{'sidebar--wrapper-visible': !hiddenSidebar}"
   >
     <app-sidebar (passRoomDetails)="onPassRoomDetails($event)"></app-sidebar>
-    <div class="sidebar--arrow" (click)="onClickArrow()">
+    <div
+      class="sidebar--arrow"
+      [ngClass]="{'sidebar--arrow-bgc': !hiddenSidebar}"
+    >
       <i
+        (click)="onClickArrow()"
         class="fa-solid"
-        [ngClass]="{'fa-caret-right': arrowRight, 'fa-caret-left': !arrowRight}"
+        [ngClass]="{' fa-caret-right': hiddenSidebar, ' fa-regular fa-xmark': !hiddenSidebar}"
       ></i>
     </div>
     <span class="sidebar--arrow--hover-text">
-      <i *ngIf="arrowRight">Show Rooms</i>
-      <i *ngIf="!arrowRight">Hide Rooms</i>
+      <i *ngIf="hiddenSidebar">Show Rooms</i>
+      <!-- <i *ngIf="!hiddenSidebar">Hide Rooms</i> -->
     </span>
   </div>
 
