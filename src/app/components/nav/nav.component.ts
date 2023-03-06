@@ -4,11 +4,11 @@ import { SocketioService } from "src/app/services/socketio.service";
 import { UserEntity } from "src/app/types/user";
 
 @Component({
-  selector: "app-header",
-  templateUrl: "./header.component.html",
-  styleUrls: ["./header.scss"],
+  selector: "app-nav",
+  templateUrl: "./nav.component.html",
+  styleUrls: ["./nav.scss"],
 })
-export class HeaderComponent implements OnInit, OnChanges, DoCheck {
+export class NavComponent implements OnInit, OnChanges, DoCheck {
   constructor(
     public authService: AuthService,
     public socketService: SocketioService
