@@ -27,7 +27,11 @@
             class="flex w-2 h-2 rounded bg-red-300 mr-2"
             [ngClass]="{'bg-green-300': member.status==='online' }"
           ></span>
-          {{member.name | titlecase}}
+          <span
+            class="inline-block max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap"
+          >
+            {{member.name | titlecase}}
+          </span>
           <span *ngIf="user?.id===member._id" class="ml-2">(You)</span>
         </button>
       </mat-list-option>
@@ -64,7 +68,10 @@
       >
         <div class="flex row-auto justify-between">
           <button class="flex justify-between mr-5">
-            <span>{{room.name}}</span>
+            <span
+              class="inline-block max-w-[130px] overflow-hidden text-ellipsis whitespace-nowrap max-[450px]:max-w-[200px]"
+              >{{room.name}}</span
+            >
           </button>
         </div>
       </mat-list-option>
