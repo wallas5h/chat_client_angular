@@ -1,27 +1,47 @@
-<div class="flex justify-center items-center relative bg-teal-300">
-  <p class="top-0 sticky" *ngIf="room._id">
-    You are in the {{room.name | titlecase}} room.
-  </p>
-  <p class="flex items-center top-0 sticky" *ngIf="privMsgMember._id">
-    Your conversation with {{privMsgMember.name | titlecase}}
+<div class="flex justify-center items-center relative h-[48px] bg-[#ffa500]">
+  <span
+    class="top-0 sticky my-2 italic flex justify-center items-center"
+    *ngIf="room._id"
+  >
+    Chat room:
+    <span
+      class="inline-block italic font-semibold px-1 mx-1 max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap"
+    >
+      {{room.name | titlecase }}
+    </span>
+  </span>
+  <span class="flex items-center sticky italic" *ngIf="privMsgMember._id">
+    Your conversation with:
+    <span
+      class="italic font-semibold px-1 mx-1 block max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap"
+    >
+      {{privMsgMember.name | titlecase}}
+    </span>
     <img
       src="{{privMsgMember.image}}"
       alt="{{privMsgMember.name}}"
       class="w-[40px] h-[40px] object-cover mx-auto my-1 rounded-full ml-2"
     />
-  </p>
-  <p class="" *ngIf="!currentRoomId">
-    Click and choice any room to start conversation.
-  </p>
+  </span>
 </div>
 <div
-  class="h-[70vh] border border-slate-300 rounded-xl overflow-y-scroll mb-[20px]"
+  class="h-[70vh] border-2 border-slate-300 rounded-xl overflow-y-scroll mb-[20px]"
 >
-  <div class="h-max-[60vh]">
+  <ng-container *ngIf="!currentRoomId">
+    <div class="fa-message-wrapper">
+      <span class="fa-message-icon">
+        <i class="fa-regular fa-comment-dots"></i>
+      </span>
+      <p class="fa-message-text">
+        Select a Conversation
+      </p>
+    </div>
+  </ng-container>
+  <div *ngIf="currentRoomId" class="h-max-[60vh] bg-[#fff] bg-opacity-30">
     <ng-container *ngFor="let message of messages">
       <div class="flex w-full justify-center items-center my-2">
         <p
-          class="flex w-[150px] justify-center items-center p-2 rounded-lg bg-lime-300"
+          class="flex justify-center items-center py-1 px-4 rounded-lg bg-[#c3c3c3]"
         >
           {{message._id}}
         </p>
@@ -60,8 +80,8 @@
 
             <div
               class="flex flex-wrap items-center min-w-[60px] break-all px-3 py-1 rounded-lg"
-              [ngClass]="{ 'ml-auto bg-blue-200': item.from.id===user?.id , 
-              'bg-indigo-200': item.from.id!==user?.id}"
+              [ngClass]="{ 'ml-auto bg-[#BFDBFE]': item.from.id===user?.id , 
+              'bg-[#e6e3d8]': item.from.id!==user?.id}"
             >
               <ng-container *ngIf="item.contentType==='text'">
                 {{item.content}}
@@ -114,12 +134,22 @@
 
 <div>
   <form
-    class="example-form flex justify-evenly items-center"
+    class="flex justify-evenly items-center"
     [formGroup]="messageForm"
     (ngSubmit)="sendMessage()"
     *ngIf="currentRoomId"
   >
-    <div class="flex justify-evenly items-center mx-2">
+    <div
+      class="caret-icon"
+      [ngClass]="{'caret-icon-visible': !showUploadIcons}"
+    >
+      <i class="fa-solid fa-angle-right"></i>
+    </div>
+
+    <div
+      class="upload-icons-wrapper"
+      [ngClass]="{'upload-icons-wrapper-visible': showUploadIcons}"
+    >
       <!-- upload file -->
       <!-- <div ng-disabled="isFileLoaded">
         <label (click)="uploadRawFile.click()" class="cursor-pointer">
@@ -138,7 +168,7 @@
       </div> -->
       <div ng-disabled="isFileLoaded">
         <label (click)="uploadImage.click()" class="cursor-pointer">
-          <mat-icon>add_a_photo</mat-icon>
+          <i class="fa-regular fa-image"></i>
         </label>
         <input
           className="p-2 rounded w-full border"
@@ -153,7 +183,7 @@
       </div>
       <div ng-disabled="isFileLoaded">
         <label (click)="uploadVideo.click()" class="cursor-pointer">
-          <mat-icon>videocam</mat-icon>
+          <i class="fa-solid fa-film"></i>
         </label>
         <input
           className="p-2 rounded w-full border"
@@ -168,23 +198,23 @@
       </div>
     </div>
     <input
-      class="w-[80%] py-3 px-2 my-2 bg-slate-100"
+      class="form-input"
       type="text"
       placeholder="Your message"
       formControlName="newMessage"
       id="inputText"
-      autofocus
       [value]="messageForm.value.newMessage"
+      (focus)="changeShowUploadIcons()"
+      (blur)="changeShowUploadIcons()"
     />
 
-    <button
-      type="submit"
-      mat-button
-      color="warn"
-      mat-raised-button
-      [disabled]="!messageForm.valid"
-    >
-      Send
+    <button class="btn-send-msg" type="submit" [disabled]="!messageForm.valid">
+      <span class="btn-send-desktop">
+        Send
+      </span>
+      <span class="btn-send-mobile">
+        <mat-icon>send</mat-icon>
+      </span>
     </button>
   </form>
 </div>
