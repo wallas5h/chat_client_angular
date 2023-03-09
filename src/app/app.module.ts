@@ -8,6 +8,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { HomePhoneContentComponent } from "./components/home-phone-content/home-phone-content.component";
 import { NavComponent } from "./components/nav/nav.component";
+import { FilterUserFormComponent } from "./components/sidebar/search-user-form/filter-user-form.component";
 import { MaterialModule } from "./Material-Module";
 import { ChatRoutingModule } from "./pages/chat/chat-routing.module";
 import { HomeComponent } from "./pages/home/home.component";
@@ -38,6 +39,7 @@ import { UploadService } from "./services/upload.service";
     ChatService,
     SocketioService,
     UploadService,
+    FilterUserFormComponent,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,
