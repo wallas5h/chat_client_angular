@@ -1,8 +1,14 @@
 <div *ngIf="user?.id==data.room.createdBy.id">
   <div class="flex items-center content-center w-full">
-    <h4 class="font-[800] capitalize">Room's name: {{room.name }}</h4>
+    <h4
+      class="inline-block font-[800] capitalize max-w-[250px] overflow-hidden text-ellipsis whitespace-nowrap"
+    >
+      Room's name: {{room.name }}
+    </h4>
   </div>
-  <div class="my-4">
+  <div
+    class="inline-block my-4 max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap"
+  >
     Created by: {{room.createdBy.name | titlecase}}
   </div>
 
@@ -48,7 +54,9 @@
               src="{{user.image}}"
               alt="{{user.name}}"
             />
-            <p>
+            <p
+              class="flex items-center max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap"
+            >
               {{user.name}}
             </p>
           </div>
