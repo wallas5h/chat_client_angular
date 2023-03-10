@@ -331,6 +331,5 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
 
   changeShowUploadIcons() {
     this.showUploadIcons = !this.showUploadIcons;
-    console.log("działa");
   }
 }
