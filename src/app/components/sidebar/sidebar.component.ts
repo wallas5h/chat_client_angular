@@ -29,6 +29,7 @@ import { roomResponseDto, roomTypes } from "src/app/types/room.dto";
 import { AddUserToRoompopupComponent } from "../add-user-to-roompopup/add-user-to-roompopup.component";
 import { EditroompopupComponent } from "../editroompopup/editroompopup.component";
 import { InfoRoomPopupComponent } from "../info-room-popup/info-room-popup.component";
+import { FilterUserFormComponent } from "./search-user-form/filter-user-form.component";
 
 @Component({
   selector: "app-sidebar",
@@ -44,6 +45,7 @@ import { InfoRoomPopupComponent } from "../info-room-popup/info-room-popup.compo
     FormsModule,
     RouterModule,
     ChatRoutingModule,
+    FilterUserFormComponent,
   ],
   templateUrl: "./sidebar.component.html",
   styles: [],
@@ -59,6 +61,9 @@ export class SidebarComponent implements OnInit, OnChanges {
   roomsArrayLength = this.rooms.length;
 
   newMessages: Dictionary<number> = {};
+
+  filterSearchActive: boolean = false;
+  filterSearchResult: any;
 
   roomForm = new FormGroup({
     newRoom: new FormControl("", Validators.required),
@@ -77,7 +82,8 @@ export class SidebarComponent implements OnInit, OnChanges {
     private dialog: MatDialog,
     private ref: ChangeDetectorRef,
     private uploadService: UploadService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    public filterForm: FilterUserFormComponent
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     this.newMessages = this.socketioService.newMessages;
@@ -101,9 +107,13 @@ export class SidebarComponent implements OnInit, OnChanges {
         }
       })
       .catch((err) => {
-        this._snackBar.open("Server error, try later", "Ok", {
-          duration: 3000,
-        });
+        this._snackBar.open(
+          "Catch setMembersData: refresh page or try later",
+          "Ok",
+          {
+            duration: 3000,
+          }
+        );
       });
   }
 
@@ -121,9 +131,13 @@ export class SidebarComponent implements OnInit, OnChanges {
         }
       })
       .catch(() => {
-        this._snackBar.open("Server error, try later", "Ok", {
-          duration: 3000,
-        });
+        this._snackBar.open(
+          "Catch setRoomsData: refresh page or try later",
+          "Ok",
+          {
+            duration: 3000,
+          }
+        );
       });
   }
 
@@ -216,5 +230,13 @@ export class SidebarComponent implements OnInit, OnChanges {
 
   orderId(memberId: string) {
     return this.uploadService.orderId(memberId, this.user?.id!);
+  }
+
+  changeFilterSearchStatus(flag: boolean) {
+    this.filterSearchActive = flag;
+  }
+
+  setFilterSearchResults(resuts: any) {
+    this.filterSearchResult = resuts;
   }
 }

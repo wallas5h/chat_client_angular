@@ -11,37 +11,75 @@
     [ngClass]="{'overflow-y-scroll':members.length>3}"
     class="h-max-[20vh]"
   >
-    <div *ngFor="let member of members" class="flex items-center">
-      <mat-list-option
-        (click)="setCurrentRoom(member,true)"
-        [value]="member"
-        [disabled]="user?.id===member._id"
-        [routerLink]="['room']"
-        [queryParams]="{member:member._id }"
-      >
-        <button
-          class="flex justify-start ml-2 items-center"
-          [disabled]="user?.id===member._id"
+    <app-filter-user-form
+      (isSearchingActive)="changeFilterSearchStatus($event)"
+      (findUserRes)="setFilterSearchResults($event)"
+    ></app-filter-user-form>
+    <div
+      [ngClass]="{'block': !filterSearchActive, 'hidden':filterSearchActive}"
+    >
+      <div *ngFor="let member of members" class="flex items-center">
+        <mat-list-option
+          (click)="setCurrentRoom(member,true)"
+          [value]="member"
+          [routerLink]="['room']"
+          [queryParams]="{member:member._id }"
         >
-          <span
-            class="flex w-2 h-2 rounded bg-red-300 mr-2"
-            [ngClass]="{'bg-green-300': member.status==='online' }"
-          ></span>
-          <span
-            class="inline-block max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap"
-          >
-            {{member.name | titlecase}}
-          </span>
-          <span *ngIf="user?.id===member._id" class="ml-2">(You)</span>
-        </button>
-      </mat-list-option>
-      <!-- new messages alert-->
-      <span
-        class="block ml-3 rounded-full w-[25px] h-[20px] bg-[#ffa500] text-sm text-center"
-        [ngClass]="{'hidden': !this.socketioService.newMessages[orderId(member._id)]}"
-      >
-        {{this.socketioService.newMessages[orderId(member._id)]}}
-      </span>
+          <button class="flex justify-start ml-2 items-center">
+            <span
+              class="flex w-2 h-2 rounded bg-red-300 mr-2"
+              [ngClass]="{'bg-green-300': member.status==='online' }"
+            ></span>
+            <span
+              class="inline-block max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap"
+            >
+              {{member.name | titlecase}}
+            </span>
+            <span *ngIf="user?.id===member._id" class="ml-2">(You)</span>
+          </button>
+        </mat-list-option>
+        <!-- new messages alert-->
+        <span
+          class="block ml-3 rounded-full w-[25px] h-[20px] bg-[#ffa500] text-sm text-center"
+          [ngClass]="{'hidden': !this.socketioService.newMessages[orderId(member._id)]}"
+        >
+          {{this.socketioService.newMessages[orderId(member._id)]}}
+        </span>
+      </div>
+    </div>
+    <div
+      class=""
+      [ngClass]="{'block': filterSearchActive, 'hidden':!filterSearchActive}"
+    >
+      <div *ngFor="let member of filterSearchResult" class="flex items-center">
+        <mat-list-option
+          (click)="setCurrentRoom(member,true)"
+          [value]="member"
+          [routerLink]="['room']"
+          [queryParams]="{member:member._id }"
+        >
+          <button class="flex justify-start ml-2 items-center">
+            <span
+              class="flex w-2 h-2 rounded bg-red-300 mr-2"
+              [ngClass]="{'bg-green-300': member.status==='online' }"
+            ></span>
+            <span
+              class="inline-block max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap"
+            >
+              {{member.name | titlecase}}
+            </span>
+            <span *ngIf="user?.id===member._id" class="ml-2">(You)</span>
+          </button>
+        </mat-list-option>
+
+        <!-- new messages alert-->
+        <span
+          class="block ml-3 rounded-full w-[25px] h-[20px] bg-[#ffa500] text-sm text-center"
+          [ngClass]="{'hidden': !this.socketioService.newMessages[orderId(member._id)]}"
+        >
+          {{this.socketioService.newMessages[orderId(member._id)]}}
+        </span>
+      </div>
     </div>
   </mat-selection-list>
 </mat-expansion-panel>
