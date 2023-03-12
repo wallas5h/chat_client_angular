@@ -2,13 +2,13 @@ import { UserEntity } from "./user";
 
 interface MessagesByDate {
   _id: string;
-  content: String;
-  contentType: String;
+  content: string;
+  contentType: string;
   from: UserEntity;
-  sockedId: String;
-  time: String;
-  date: String;
-  to: String;
+  sockedId: string;
+  time: string;
+  date: string;
+  to: string;
 }
 
 export interface MessageResponseDto {
