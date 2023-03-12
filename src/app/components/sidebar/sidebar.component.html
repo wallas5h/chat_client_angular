@@ -5,16 +5,17 @@
     </mat-panel-title>
   </mat-expansion-panel-header>
 
+  <app-filter-user-form
+    (isSearchingActive)="changeFilterSearchStatus($event)"
+    (findUserRes)="setFilterSearchResults($event)"
+  ></app-filter-user-form>
+
   <mat-selection-list
     [multiple]="false"
     [multiple]="false"
+    style="max-height: 30vh;"
     [ngClass]="{'overflow-y-scroll':members.length>3}"
-    class="h-max-[20vh]"
   >
-    <app-filter-user-form
-      (isSearchingActive)="changeFilterSearchStatus($event)"
-      (findUserRes)="setFilterSearchResults($event)"
-    ></app-filter-user-form>
     <div
       [ngClass]="{'block': !filterSearchActive, 'hidden':filterSearchActive}"
     >
@@ -94,8 +95,8 @@
 
   <mat-selection-list
     [multiple]="false"
+    style="max-height: 20vh; overflow-x: hidden;"
     [ngClass]="{'overflow-y-scroll':roomsArrayLength>3}"
-    class="h-max-[20vh]"
   >
     <div *ngFor="let room of rooms" class="flex items-center">
       <mat-list-option
