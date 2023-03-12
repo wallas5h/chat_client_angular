@@ -8,11 +8,8 @@
 
   <div class="flex row-auto items-center justify-between">
     <ng-container *ngIf="isAuthenticated">
-      <div class="chat-link">
-        <span
-          class="chat-link--text"
-          (click)="checkUserOnlineStatus()"
-          [routerLink]="['../chat']"
+      <div class="chat-link" [routerLink]="['../chat']">
+        <span class="chat-link--text" (click)="checkUserOnlineStatus()"
           >Chat
         </span>
         <span
