@@ -63,7 +63,7 @@ export class SidebarComponent implements OnInit, OnChanges {
   newMessages: Dictionary<number> = {};
 
   filterSearchActive: boolean = false;
-  filterSearchResult: any;
+  filterUserSearchResult: any;
 
   roomForm = new FormGroup({
     newRoom: new FormControl("", Validators.required),
@@ -187,10 +187,20 @@ export class SidebarComponent implements OnInit, OnChanges {
       : roomTypes.public;
 
     if (name) {
-      await this.chatService.createRoom(name, type);
+      await this.chatService
+        .createRoom(name, type)
+        .then((res) => {
+          if (res.data.rooms) {
+            this.rooms = res.data.rooms;
+            this.roomsArrayLength = this.rooms.length;
+          }
+        })
+        .catch(() => {
+          this._snackBar.open("Sorry, server error. Try later.", "Ok", {
+            duration: 3000,
+          });
+        });
     }
-    this.setRoomsData();
-    this.ref.detectChanges();
 
     this.roomForm.value.newRoom = "";
     this.roomForm.value.private = false;
@@ -200,18 +210,41 @@ export class SidebarComponent implements OnInit, OnChanges {
   }
 
   disLikeRoom(roomId: string) {
-    if (confirm("Are you sure to remove this room from list? ")) {
-      this.chatService.dislikeRoom(roomId);
-      this.setRoomsData();
-      this.ref.detectChanges();
+    if (confirm("Are you sure to remove this chat from list? ")) {
+      this.chatService
+        .dislikeRoom(roomId)
+        .then((res) => {
+          if (res.data.rooms) {
+            this.rooms = res.data.rooms;
+            this.roomsArrayLength = this.rooms.length;
+          }
+        })
+        .then(() => {
+          this.ref.detectChanges();
+        })
+        .catch(() => {
+          this._snackBar.open("Sorry, server error. Try later.", "Ok", {
+            duration: 3000,
+          });
+        });
     }
   }
 
   deleteRoom(roomId: string) {
-    if (confirm("Are you sure to delete this room? ")) {
-      this.chatService.deleteRoom(roomId);
-      this.setRoomsData();
-      this.ref.detectChanges();
+    if (confirm("Are you sure to delete this chat? ")) {
+      this.chatService
+        .deleteRoom(roomId)
+        .then((res) => {
+          if (res.data.rooms) {
+            this.rooms = res.data.rooms;
+            this.roomsArrayLength = this.rooms.length;
+          }
+        })
+        .catch(() => {
+          this._snackBar.open("Sorry, server error. Try later.", "Ok", {
+            duration: 3000,
+          });
+        });
     }
   }
 
@@ -237,6 +270,6 @@ export class SidebarComponent implements OnInit, OnChanges {
   }
 
   setFilterSearchResults(resuts: any) {
-    this.filterSearchResult = resuts;
+    this.filterUserSearchResult = resuts;
   }
 }
