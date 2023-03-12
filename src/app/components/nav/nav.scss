@@ -19,14 +19,13 @@
 }
 
 .chat-link {
-  // width: 125px;
   padding: 1rem;
   color: #fff;
   margin-right: 1rem;
   cursor: pointer;
 
-  &:hover {
-    background-color: lighten($color: $gray , $amount: 10%);
+  &:hover .chat-link--text {
+    color: $orange;
   }
 
   &--text {
