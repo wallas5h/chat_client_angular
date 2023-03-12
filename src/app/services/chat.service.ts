@@ -31,22 +31,18 @@ export class ChatService {
       name,
       type,
     };
-    const req = this.http.post(`${apiUrl}/rooms`, room);
-    req.subscribe((res) => {
-      // console.log(res);
-    });
-    return req;
+    return axios.post(`${apiUrl}/rooms`, room);
   }
 
   async dislikeRoom(roomId: string) {
     const body = {
       id: roomId,
     };
-    axios.patch(`${apiUrl}/rooms`, body);
+    return axios.patch(`${apiUrl}/rooms`, body);
   }
 
   async deleteRoom(roomId: string) {
-    axios.delete(`${apiUrl}/rooms/${roomId}`);
+    return axios.delete(`${apiUrl}/rooms/${roomId}`);
   }
 
   async addUserToRoom(roomId: string, userId: string, userName: string) {
