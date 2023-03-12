@@ -107,13 +107,9 @@ export class SidebarComponent implements OnInit, OnChanges {
         }
       })
       .catch((err) => {
-        this._snackBar.open(
-          "Catch setMembersData: refresh page or try later",
-          "Ok",
-          {
-            duration: 3000,
-          }
-        );
+        this._snackBar.open("Server error: refresh page or try later", "Ok", {
+          duration: 3000,
+        });
       });
   }
 
