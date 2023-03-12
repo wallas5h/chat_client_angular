@@ -1,5 +1,11 @@
-<div class="flex items-center justify-between w-screen bg-[#333] px-4">
-  <a href="/" [routerLink]="['/']" class="p-4 text-white text-[1.2rem]">
+<div
+  class="flex items-center justify-between w-screen bg-[#333] px-4 font-semibold"
+>
+  <a
+    href="/"
+    [routerLink]="['/']"
+    class="p-4 text-white text-[1.2rem] tracking-wide"
+  >
     <span class="text-[#ffa500]">C</span>hat<span class="text-[#ffa500]">M</span
     >e</a
   >
@@ -27,7 +33,7 @@
           class="w-[20px] h-[20px] rounded-full mr-4 my-auto"
         />
         <span
-          class="flex my-auto px-1 text-slate-100 max-w-[80px] overflow-hidden text-ellipsis whitespace-nowrap"
+          class="flex my-auto px-1 text-slate-100 max-w-[80px] overflow-hidden text-ellipsis whitespace-nowrap font-semibold"
           >{{user?.name | titlecase}}</span
         >
         <button mat-button>
