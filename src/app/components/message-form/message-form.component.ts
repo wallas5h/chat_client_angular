@@ -25,6 +25,7 @@ import { UploadService } from "src/app/services/upload.service";
 import { MessageResponseDto, MessageTypes } from "src/app/types/message.dto";
 import { roomResponseDto } from "src/app/types/room.dto";
 import { UserFindResponse } from "src/app/types/user";
+import { emojiIcons } from "./icons.utils";
 
 @Component({
   selector: "app-message-form",
@@ -62,6 +63,9 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
   logNb: number = 0;
 
   showUploadIcons: boolean = true;
+  showEmojicons: boolean = false;
+  emojiIcons: string[] = emojiIcons;
+  choosenEmojiIcon: string = "";
 
   messageForm = new FormGroup({
     newMessage: new FormControl("", Validators.required),
@@ -211,6 +215,9 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
       case MessageTypes.raw:
         message = this.uploadRawFileUrl;
         break;
+      case MessageTypes.emoji:
+        message = this.choosenEmojiIcon;
+        break;
 
       default:
         break;
@@ -325,11 +332,23 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
     document.getElementById("point")?.scrollIntoView({ behavior: "smooth" });
   }
 
-  onMessageHover(value: boolean) {
-    this.isMessageHover = value;
+  changeVisibilityUploadIcons() {
+    this.showUploadIcons = !this.showUploadIcons;
   }
 
-  changeShowUploadIcons() {
-    this.showUploadIcons = !this.showUploadIcons;
+  changeVisibilityEmojiIcons() {
+    this.showEmojicons = !this.showEmojicons;
+  }
+
+  handleClickEmojiIcon(icon: string) {
+    if (!this.messageForm.value.newMessage) {
+      this.messageType = MessageTypes.emoji;
+      this.choosenEmojiIcon = icon;
+
+      this.sendMessage();
+    } else {
+      this.messageForm.value.newMessage += ` ${icon} `;
+    }
+    this.changeVisibilityEmojiIcons();
   }
 }

@@ -48,25 +48,26 @@
       </div>
       <ng-container *ngFor="let item of message.messagesByDate">
         <div
-          class="flex my-3 justify-start"
-          [ngClass]="{ 'justify-end': item.from.id===user?.id }"
-          (mouseenter)="onMessageHover(true)"
+          class="messageByDate-wrapper"
+          [ngClass]="{ 'messageByDate-wrapper-user': item.from.id===user?.id }"
         >
-          <ng-container *ngIf="isMessageHover && item.from.id===user?.id">
-            <button
-              mat-icon-button
-              [matMenuTriggerFor]="settings"
-              matTooltip="more"
-              matTooltipPosition="right"
-            >
-              <mat-icon>more_vert</mat-icon>
-            </button>
-
-            <mat-menu #settings="matMenu">
-              <button (click)="deleteMessage(item._id)" mat-menu-item>
-                <mat-icon>delete_outline</mat-icon>
+          <ng-container *ngIf=" item.from.id===user?.id">
+            <div class="messageByDate-user-settings">
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="settings"
+                matTooltip="more"
+                matTooltipPosition="right"
+              >
+                <mat-icon>more_vert</mat-icon>
               </button>
-            </mat-menu>
+
+              <mat-menu #settings="matMenu">
+                <button (click)="deleteMessage(item._id)" mat-menu-item>
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </mat-menu>
+            </div>
           </ng-container>
 
           <div class="flex flex-wrap items-center p-[5px] max-w-[50%] rounded">
@@ -81,13 +82,20 @@
             <div
               class="flex flex-wrap items-center min-w-[60px] break-all px-3 py-1 rounded-lg"
               [ngClass]="{ 'ml-auto bg-[#BFDBFE]': item.from.id===user?.id , 
-              'bg-[#e6e3d8]': item.from.id!==user?.id}"
+              'bg-[#e6e3d8]': item.from.id!==user?.id,
+            'bg-transparent':item.contentType.includes('emoji')
+        
+            }"
             >
               <ng-container *ngIf="item.contentType==='text'">
                 {{item.content}}
               </ng-container>
               <ng-container *ngIf="item.contentType==='image'">
                 <img class="max-w-[200px]" src="{{item.content}}" alt="image" />
+              </ng-container>
+              <ng-container *ngIf="item.contentType==='emoji'">
+                <span class="text-[30px]">{{item.content}}</span>
+                <!-- <img class="max-w-[200px]" src="{{item.content}}" alt="image" /> -->
               </ng-container>
               <ng-container *ngIf="item.contentType==='video'">
                 <video class="max-w-[200px]" controls>
@@ -114,7 +122,7 @@
             </div>
             <div
               class="flex justify-end basis-[50%] ml-auto text-xs mt-1"
-              [ngClass]="{ 'mx-auto': item.from.id!==user?.id }"
+              [ngClass]="{ 'mx-auto': item.from.id!==user?.id,'hidden':item.contentType.includes('emoji') }"
             >
               {{item.time}}
             </div>
@@ -197,16 +205,35 @@
         />
       </div>
     </div>
-    <input
-      class="form-input"
-      type="text"
-      placeholder="Your message"
-      formControlName="newMessage"
-      id="inputText"
-      [value]="messageForm.value.newMessage"
-      (focus)="changeShowUploadIcons()"
-      (blur)="changeShowUploadIcons()"
-    />
+    <div
+      class="form-input-wrapper"
+      [ngClass]="{'form-input-wrapper--wide': !showUploadIcons}"
+    >
+      <input
+        class="form-input"
+        type="text"
+        placeholder="Your message"
+        formControlName="newMessage"
+        id="inputText"
+        [value]="messageForm.value.newMessage"
+        (focus)="changeVisibilityUploadIcons()"
+        (blur)="changeVisibilityUploadIcons()"
+      />
+      <p class="emoji-icon" (click)="changeVisibilityEmojiIcons()">
+        <i class="fa-sharp fa-solid fa-face-smile"></i>
+      </p>
+
+      <div
+        class="emoji-popup"
+        [ngClass]="{'emoji-popup-visible': showEmojicons}"
+      >
+        <ng-container *ngFor="let icon of emojiIcons">
+          <span class="icon" (click)="handleClickEmojiIcon(icon)"
+            >{{icon}}</span
+          >
+        </ng-container>
+      </div>
+    </div>
 
     <button class="btn-send-msg" type="submit" [disabled]="!messageForm.valid">
       <span class="btn-send-desktop">
