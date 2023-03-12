@@ -55,7 +55,7 @@ export class UploadService {
 
     switch (fileType) {
       case MessageTypes.image:
-        if (file.size > 1000000) {
+        if (file.size > 10000000) {
           alert("Max file size is 10MB");
           return null;
         }
