@@ -1,0 +1,29 @@
+<div class="relative">
+  <div
+    class="flex justify-center items-center"
+    *ngIf="data.messageType==='image'"
+  >
+    <img
+      style="max-width: 70vw; max-height: 80vh;"
+      class="w-max-70vw h-max-80vh"
+      src="{{data.content}}"
+      alt="image"
+    />
+  </div>
+  <ng-container *ngIf="data.messageType==='video'">
+    <video class="w-full" controls>
+      <source src="{{data.content}}" type="video/mp4" />
+    </video>
+  </ng-container>
+
+  <div mat-dialog-actions>
+    <button
+      style="margin-left: auto;"
+      mat-button
+      mat-dialog-close
+      color="primary"
+    >
+      Close
+    </button>
+  </div>
+</div>
