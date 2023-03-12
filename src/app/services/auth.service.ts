@@ -43,10 +43,12 @@ export class AuthService {
           localStorage.setItem("data", res.data.data);
 
           this._snackBar.open("Login success", "Ok", { duration: 3000 });
-          this.route.navigate(["../chat"]);
         } else {
           this._snackBar.open("Login failed", "Ok", { duration: 3000 });
         }
+      })
+      .then(() => {
+        this.route.navigate(["../chat"]);
       })
       .catch((err) => {
         this._snackBar.open("Login failed", "Ok", { duration: 3000 });
@@ -63,10 +65,12 @@ export class AuthService {
           localStorage.setItem("data", res.data.data);
 
           this._snackBar.open("Signup success", "Ok", { duration: 3000 });
-          this.route.navigate(["../chat"]);
         } else {
           this._snackBar.open("Signup failed", "Ok", { duration: 3000 });
         }
+      })
+      .then(() => {
+        this.route.navigate(["../chat"]);
       })
       .catch((err) => {
         this._snackBar.open("Signup failed", "Ok", { duration: 3000 });
@@ -74,13 +78,15 @@ export class AuthService {
   }
 
   async logout() {
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
     axios
-      .delete(`${this.apisUrl}/${authEndpoints.logout}`)
+      .delete(`${this.apisUrl}/${authEndpoints.logout}`, config)
       .then((res) => {
         if (res.status === 200) {
           this.isAuthenticated = false;
           localStorage.clear();
-          this._snackBar.open("Logout success", "Ok", { duration: 3000 });
           this.route.navigate(["/login"]);
         }
       })
@@ -103,7 +109,10 @@ export class AuthService {
   }
 
   getUsers() {
-    return axios.get(`${this.apisUrl}`);
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    return axios.get(`${this.apisUrl}`, config);
   }
 
   getUserData() {
