@@ -5,6 +5,8 @@ module.exports = {
     extend: {},
     screens: {
       tablet: "640px",
+      md: "800px",
+      laptop: "1024px",
     },
   },
   plugins: [],
