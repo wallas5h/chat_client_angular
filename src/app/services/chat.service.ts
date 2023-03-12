@@ -19,7 +19,10 @@ export class ChatService {
   ) {}
 
   getRooms() {
-    return axios.get(apiUrl + "/rooms");
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    };
+    return axios.get(apiUrl + "/rooms", config);
   }
 
   async getMembers() {
