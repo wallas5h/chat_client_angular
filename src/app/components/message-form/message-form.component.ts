@@ -14,6 +14,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
+import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import axios from "axios";
 import { apiUrl } from "config/api";
@@ -25,6 +26,7 @@ import { UploadService } from "src/app/services/upload.service";
 import { MessageResponseDto, MessageTypes } from "src/app/types/message.dto";
 import { roomResponseDto } from "src/app/types/room.dto";
 import { UserFindResponse } from "src/app/types/user";
+import { MediapopupComponent } from "../mediapopup/mediapopup.component";
 import { emojiIcons } from "./icons.utils";
 
 @Component({
@@ -75,7 +77,8 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
     private authService: AuthService,
     private _snackBar: MatSnackBar,
     private uploadService: UploadService,
-    private socketService: SocketioService
+    private socketService: SocketioService,
+    private dialog: MatDialog
   ) {}
 
   ngAfterViewInit(): void {
@@ -350,5 +353,16 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
       this.messageForm.value.newMessage += ` ${icon} `;
     }
     this.changeVisibilityEmojiIcons();
+  }
+
+  handleOpenMediaPopup(content: string, messageType: string) {
+    let popup = this.dialog.open(MediapopupComponent, {
+      minHeight: "20vh",
+      maxHeight: "100vh",
+      data: {
+        content,
+        messageType,
+      },
+    });
   }
 }

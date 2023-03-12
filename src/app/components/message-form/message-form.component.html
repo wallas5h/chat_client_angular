@@ -54,7 +54,6 @@
           <ng-container *ngIf=" item.from.id===user?.id">
             <div class="messageByDate-user-settings">
               <button
-                mat-icon-button
                 [matMenuTriggerFor]="settings"
                 matTooltip="more"
                 matTooltipPosition="right"
@@ -70,7 +69,7 @@
             </div>
           </ng-container>
 
-          <div class="flex flex-wrap items-center p-[5px] max-w-[50%] rounded">
+          <div class="flex flex-wrap items-center p-[5px] max-w-[60%] rounded">
             <ng-container *ngIf="item.from.id!==user?.id">
               <img
                 src="{{item.from.image}}"
@@ -83,7 +82,7 @@
               class="flex flex-wrap items-center min-w-[60px] break-all px-3 py-1 rounded-lg"
               [ngClass]="{ 'ml-auto bg-[#BFDBFE]': item.from.id===user?.id , 
               'bg-[#e6e3d8]': item.from.id!==user?.id,
-            'bg-transparent':item.contentType.includes('emoji')
+            'bg-transparent':['emoji','image','video'].includes(item.contentType)
         
             }"
             >
@@ -91,14 +90,25 @@
                 {{item.content}}
               </ng-container>
               <ng-container *ngIf="item.contentType==='image'">
-                <img class="max-w-[200px]" src="{{item.content}}" alt="image" />
+                <img
+                  class="max-w-[150px] cursor-pointer tablet:max-w-[200px] laptop:max-w-[300px]"
+                  src="{{item.content}}"
+                  alt="image"
+                  (click)="handleOpenMediaPopup(item.content, item.contentType)"
+                />
               </ng-container>
               <ng-container *ngIf="item.contentType==='emoji'">
-                <span class="text-[30px]">{{item.content}}</span>
+                <span class="block h-min-[50px] text-[40px]"
+                  >{{item.content}}</span
+                >
                 <!-- <img class="max-w-[200px]" src="{{item.content}}" alt="image" /> -->
               </ng-container>
               <ng-container *ngIf="item.contentType==='video'">
-                <video class="max-w-[200px]" controls>
+                <video
+                  class="max-w-[200px] tablet:max-w-[250px] laptop:max-w-[350px] cursor-pointer"
+                  controls
+                  (click)="handleOpenMediaPopup(item.content, item.contentType)"
+                >
                   <source src="{{item.content}}" type="video/mp4" />
                 </video>
               </ng-container>
