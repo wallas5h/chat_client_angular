@@ -24,11 +24,12 @@ $phone-height: 533px;
   @extend %flex-center;
 
   p {
-    width: 150px;
+    width: 120px;
     @extend %flex-center;
     padding: 0.4rem;
     border-radius: 0.5rem;
-    background-color: rgb(190 242 100);
+    // background-color: rgb(190 242 100);
+    background-color: #c3c3c3;
     font-size: 0.85rem;
   }
 }
