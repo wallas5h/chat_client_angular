@@ -59,6 +59,7 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
   uploadVideoUrl: string = "";
   uploadRawFileUrl: string = "";
   isFileLoaded: boolean = false;
+  defaultUserImage: string = "../../../assets/user.png";
 
   isMessageHover: boolean = false;
   intervalId: any;
@@ -364,5 +365,9 @@ export class MessageFormComponent implements OnInit, OnChanges, AfterViewInit {
         messageType,
       },
     });
+  }
+
+  onImgError(event: any) {
+    event.target.src = this.defaultUserImage;
   }
 }

@@ -18,14 +18,15 @@
       {{privMsgMember.name | titlecase}}
     </span>
     <img
-      src="{{privMsgMember.image}}"
+      src="{{privMsgMember.image? privMsgMember.image: defaultUserImage}}"
+      (error)="onImgError($event)"
       alt="{{privMsgMember.name}}"
       class="w-[40px] h-[40px] object-cover mx-auto my-1 rounded-full ml-2"
     />
   </span>
 </div>
 <div
-  class="h-[70vh] border-2 border-slate-300 rounded-xl overflow-x-hidden overflow-y-scroll mb-[20px]"
+  class="h-[70vh] border-2 border-slate-300 rounded-xl overflow-x-hidden overflow-y-scroll mb-[20px] bg-[#fff] bg-opacity-30"
 >
   <ng-container *ngIf="!currentRoomId">
     <div class="fa-message-wrapper">
@@ -37,7 +38,7 @@
       </p>
     </div>
   </ng-container>
-  <div *ngIf="currentRoomId" class="h-max-[60vh] bg-[#fff] bg-opacity-30">
+  <div *ngIf="currentRoomId" class="h-max-[60vh]">
     <ng-container *ngFor="let message of messages">
       <div class="flex w-full justify-center items-center my-2">
         <p
@@ -72,8 +73,9 @@
           <div class="flex flex-wrap items-center p-[5px] max-w-[60%] rounded">
             <ng-container *ngIf="item.from.id!==user?.id">
               <img
-                src="{{item.from.image}}"
+                src="{{item.from.image ? item.from.image: defaultUserImage}}"
                 alt="{{item.from.name}}"
+                (error)="onImgError($event)"
                 class="w-[35px] h-[35px] object-cover rounded-full mr-[10px]"
               />
             </ng-container>
@@ -101,7 +103,6 @@
                 <span class="block h-min-[50px] text-[40px]"
                   >{{item.content}}</span
                 >
-                <!-- <img class="max-w-[200px]" src="{{item.content}}" alt="image" /> -->
               </ng-container>
               <ng-container *ngIf="item.contentType==='video'">
                 <video
@@ -146,7 +147,7 @@
         <mat-spinner></mat-spinner>
       </div>
     </ng-container>
-    <p id="point" *ngIf="messages.length">.</p>
+    <p style="color: transparent;" id="point" *ngIf="messages.length">.</p>
   </div>
 </div>
 

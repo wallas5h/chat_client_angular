@@ -16,6 +16,7 @@ export class NavComponent implements OnInit, OnChanges, DoCheck {
 
   isAuthenticated: Boolean = false;
   user: UserEntity | undefined;
+  defaultUserImage: string = "../../../assets/user.png";
 
   ngDoCheck(): void {
     this.user = this.authService.getUserData();
@@ -31,5 +32,9 @@ export class NavComponent implements OnInit, OnChanges, DoCheck {
 
   logout() {
     this.authService.logout();
+  }
+
+  onImgError(event: any) {
+    event.target.src = this.defaultUserImage;
   }
 }

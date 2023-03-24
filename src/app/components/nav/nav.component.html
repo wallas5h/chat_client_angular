@@ -28,8 +28,9 @@
 
       <div class="flex items-center cursor-pointer" [matMenuTriggerFor]="menu">
         <img
-          src="{{user?.image}}"
+          src="{{user?.image ?  user?.image: defaultUserImage}}"
           alt="{{user?.name}}"
+          (error)="onImgError($event)"
           class="w-[20px] h-[20px] rounded-full mr-4 my-auto"
         />
         <span
