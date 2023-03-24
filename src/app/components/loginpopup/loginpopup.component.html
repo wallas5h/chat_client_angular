@@ -1,0 +1,24 @@
+<div class="phone: w-max-[100vw] md: w-max-[80vw] laptop: w-max-[50vw]">
+  <div
+    class="flex justify-center w-full py-2 px-3 mb-2 text-[#4d4d4d] text-lg font-semibold"
+  >
+    Alert
+  </div>
+  <div class="mb-4">
+    <p
+      class="flex justify-center w-[100%] text-center text-red-700 font-semibold"
+    >
+      {{data.message}}
+    </p>
+    <p class="flex justify-center w-[100%] text-center text-xs text-sky-700">
+      Didn't find email? Check spam or click button below, we will send link
+      again.
+    </p>
+  </div>
+  <div class="flex justify-between phone:justify-center flex-wrap mt-4">
+    <button mat-button>Resend confirmation e-mail</button>
+    <button class="phone: mt-3" mat-button mat-dialog-close color="primary">
+      Close
+    </button>
+  </div>
+</div>
