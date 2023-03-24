@@ -1,10 +1,12 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import axios from "axios";
 import { apiUrl } from "src/config/api";
+import { LoginpopupComponent } from "../components/loginpopup/loginpopup.component";
 import {
   authEndpoints,
   loginUserDto,
@@ -22,7 +24,8 @@ export class AuthService {
     private http: HttpClient,
     private route: Router,
     private _snackBar: MatSnackBar,
-    private socketService: SocketioService
+    private socketService: SocketioService,
+    private dialog: MatDialog
   ) {
     this.user = this.getUserData();
   }
@@ -47,11 +50,22 @@ export class AuthService {
           this._snackBar.open("Login failed", "Ok", { duration: 3000 });
         }
       })
-      .then(() => {
+      .then((res) => {
         this.route.navigate(["../chat"]);
       })
       .catch((err) => {
-        this._snackBar.open("Login failed", "Ok", { duration: 3000 });
+        if (err.response.data.invalid) {
+          let popup = this.dialog.open(LoginpopupComponent, {
+            minHeight: "20vh",
+            maxHeight: "100vh",
+            data: {
+              message: err.response.data.invalid,
+              email: user.email,
+            },
+          });
+        } else {
+          this._snackBar.open("Login failed", "Ok", { duration: 3000 });
+        }
       });
   }
 
@@ -60,20 +74,35 @@ export class AuthService {
       .post(`${this.apisUrl}/${authEndpoints.signup}`, user)
       .then((res) => {
         if (res.status == 200) {
-          this.isAuthenticated = true;
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("data", res.data.data);
-
-          this._snackBar.open("Signup success", "Ok", { duration: 3000 });
-        } else {
-          this._snackBar.open("Signup failed", "Ok", { duration: 3000 });
+          if (res.data.message) {
+            let popup = this.dialog.open(LoginpopupComponent, {
+              minHeight: "20vh",
+              maxHeight: "100vh",
+              data: {
+                message: res.data.message,
+                email: user.email,
+              },
+            });
+            return;
+          }
         }
       })
       .then(() => {
-        this.route.navigate(["../chat"]);
+        // this.route.navigate(["../chat"]);
       })
       .catch((err) => {
-        this._snackBar.open("Signup failed", "Ok", { duration: 3000 });
+        if (err.response.data.invalid) {
+          let popup = this.dialog.open(LoginpopupComponent, {
+            minHeight: "20vh",
+            maxHeight: "100vh",
+            data: {
+              message: err.response.data.invalid,
+              email: user.email,
+            },
+          });
+        } else {
+          this._snackBar.open("Login failed", "Ok", { duration: 3000 });
+        }
       });
   }
 
@@ -91,7 +120,8 @@ export class AuthService {
         }
       })
       .catch((err) => {
-        this._snackBar.open("Logout failed", "Ok", { duration: 3000 });
+        localStorage.clear();
+        // this._snackBar.open("Logout failed", "Ok", { duration: 3000 });
       });
   }
 
