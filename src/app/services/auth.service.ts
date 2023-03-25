@@ -46,8 +46,11 @@ export class AuthService {
           localStorage.setItem("data", res.data.data);
 
           this._snackBar.open("Login success", "Ok", { duration: 3000 });
-          this.route.navigate(["../chat"]);
+          // this.route.navigate(["../chat"]);
         }
+      })
+      .then(() => {
+        this.route.navigate(["../chat"]);
       })
       .catch((err) => {
         if (err.response.data.invalid) {
