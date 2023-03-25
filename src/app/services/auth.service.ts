@@ -46,25 +46,18 @@ export class AuthService {
           localStorage.setItem("data", res.data.data);
 
           this._snackBar.open("Login success", "Ok", { duration: 3000 });
-        } else {
-          this._snackBar.open("Login failed", "Ok", { duration: 3000 });
+          this.route.navigate(["../chat"]);
         }
-      })
-      .then((res) => {
-        this.route.navigate(["../chat"]);
       })
       .catch((err) => {
         if (err.response.data.invalid) {
-          let popup = this.dialog.open(LoginpopupComponent, {
-            minHeight: "20vh",
-            maxHeight: "100vh",
-            data: {
-              message: err.response.data.invalid,
-              email: user.email,
-            },
-          });
+          this.shopPopupInfo(err.response.data.invalid, user.email, false);
+        } else if (err.response.data.unconfirmed) {
+          this.shopPopupInfo(err.response.data.unconfirmed, user.email, true);
         } else {
-          this._snackBar.open("Login failed", "Ok", { duration: 3000 });
+          this._snackBar.open("Login failed, try later.", "Ok", {
+            duration: 3000,
+          });
         }
       });
   }
@@ -75,15 +68,7 @@ export class AuthService {
       .then((res) => {
         if (res.status == 200) {
           if (res.data.message) {
-            let popup = this.dialog.open(LoginpopupComponent, {
-              minHeight: "20vh",
-              maxHeight: "100vh",
-              data: {
-                message: res.data.message,
-                email: user.email,
-              },
-            });
-            return;
+            this.shopPopupInfo(res.data.message, user.email, true);
           }
         }
       })
@@ -92,16 +77,11 @@ export class AuthService {
       })
       .catch((err) => {
         if (err.response.data.invalid) {
-          let popup = this.dialog.open(LoginpopupComponent, {
-            minHeight: "20vh",
-            maxHeight: "100vh",
-            data: {
-              message: err.response.data.invalid,
-              email: user.email,
-            },
-          });
+          this.shopPopupInfo(err.response.data.invalid, user.email, false);
         } else {
-          this._snackBar.open("Login failed", "Ok", { duration: 3000 });
+          this._snackBar.open("Register failed, try later.", "Ok", {
+            duration: 3000,
+          });
         }
       });
   }
@@ -123,6 +103,38 @@ export class AuthService {
         localStorage.clear();
         // this._snackBar.open("Logout failed", "Ok", { duration: 3000 });
       });
+  }
+
+  resendEmailRegisterConfirmation(email: string) {
+    const body = {
+      email,
+    };
+    axios
+      .post(`${this.apisUrl}/${authEndpoints.resendEmailConfirmation}`, body)
+      .then((res) => {
+        if (res.status == 200) {
+          if (res.data.message) {
+            this.shopPopupInfo(res.data.message, email, false);
+          }
+        }
+      })
+      .catch((err) => {
+        if (err.response.data.invalid) {
+          this.shopPopupInfo(err.response.data.invalid, email, false);
+        }
+      });
+  }
+
+  shopPopupInfo(message: string, email = "", additionalInfo = true) {
+    this.dialog.open(LoginpopupComponent, {
+      minHeight: "20vh",
+      maxHeight: "100vh",
+      data: {
+        message: message,
+        email,
+        additionalInfo,
+      },
+    });
   }
 
   setUserOnlineStatus(status: boolean) {
