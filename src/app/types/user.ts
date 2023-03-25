@@ -15,6 +15,7 @@ export enum authEndpoints {
   findUsers = "find",
   newMessages = "messages",
   status = "status",
+  resendEmailConfirmation = "resendRegisterVerification",
 }
 
 export interface UserEntity {
