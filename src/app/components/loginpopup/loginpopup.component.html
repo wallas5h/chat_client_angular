@@ -10,14 +10,30 @@
     >
       {{data.message}}
     </p>
-    <p class="flex justify-center w-[100%] text-center text-xs text-sky-700">
+    <p
+      *ngIf="data.additionalInfo"
+      class="flex justify-center w-[100%] text-center text-xs text-sky-700"
+    >
       Didn't find email? Check spam or click button below, we will send link
       again.
     </p>
   </div>
-  <div class="flex justify-between phone:justify-center flex-wrap mt-4">
-    <button mat-button>Resend confirmation e-mail</button>
-    <button class="phone: mt-3" mat-button mat-dialog-close color="primary">
+  <div class="flex justify-between phone:justify-evenly flex-wrap mt-4">
+    <button
+      style="margin-top: 10px;"
+      mat-raised-button
+      class="bg-green-500 text-white"
+      (click)="resendEmailConfirmation()"
+      *ngIf="data.additionalInfo"
+    >
+      Resend e-mail confirmation
+    </button>
+    <button
+      style="margin-top: 10px;"
+      mat-raised-button
+      class="block bg-blue-500 text-slate-100 hover:shadow-lg shadow-cyan-500/50 md::mt-0"
+      mat-dialog-close
+    >
       Close
     </button>
   </div>
