@@ -1,0 +1,48 @@
+<div class="flex justify-center min-[900px]:justify-around py-10 items-center">
+  <div class="">
+    <mat-card class="flex-row justify-center">
+      <mat-card-title class="text-center pb-5"
+        >Email Confirmation</mat-card-title
+      >
+
+      <mat-card-content class="ml-auto border-none drop-shadow-none">
+        <form
+          class="example-form w-80 m-auto"
+          [formGroup]="confirmationForms"
+          (ngSubmit)="resendEmailConfirmation()"
+        >
+          <mat-form-field class="example-full-width w-full" appearance="fill">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              placeholder="Email"
+              type="email"
+              name="email"
+              formControlName="email"
+              [value]="data.email"
+            />
+            <mat-error
+              *ngIf="confirmationForms.controls.email.touched && confirmationForms.controls.email.hasError('required')"
+              >Email is required</mat-error
+            >
+            <mat-error
+              *ngIf="confirmationForms.controls.email.touched && confirmationForms.controls.email.hasError('email')"
+              >Email must be valid</mat-error
+            >
+          </mat-form-field>
+
+          <div class="flex justify-evenly">
+            <button
+              mat-raised-button
+              type="submit"
+              class="bg-green-600 text-slate-100"
+              [disabled]="!confirmationForms.valid"
+            >
+              Resend e-mail confirmation
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
