@@ -26,6 +26,7 @@ import { ChatService } from "src/app/services/chat.service";
 import { Dictionary, SocketioService } from "src/app/services/socketio.service";
 import { UploadService } from "src/app/services/upload.service";
 import { roomResponseDto, roomTypes } from "src/app/types/room.dto";
+import { UserFindResponse, UserStatus } from "src/app/types/user";
 import { AddUserToRoompopupComponent } from "../add-user-to-roompopup/add-user-to-roompopup.component";
 import { EditroompopupComponent } from "../editroompopup/editroompopup.component";
 import { InfoRoomPopupComponent } from "../info-room-popup/info-room-popup.component";
@@ -103,7 +104,7 @@ export class SidebarComponent implements OnInit, OnChanges {
       .getUsers()
       .then((res) => {
         if (res.data.users) {
-          this.members = res.data.users;
+          this.members = this.sortMembersArray(res.data.users);
         }
       })
       .catch((err) => {
@@ -267,5 +268,38 @@ export class SidebarComponent implements OnInit, OnChanges {
 
   setFilterSearchResults(resuts: any) {
     this.filterUserSearchResult = resuts;
+  }
+
+  sortByName(a: UserFindResponse, b: UserFindResponse) {
+    const tmpA = a.name.toLowerCase();
+    const tmpB = b.name.toLowerCase();
+
+    if (tmpA > tmpB) {
+      return 1;
+    } else if (tmpA < tmpB) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+
+  sortMembersArray(array: UserFindResponse[]) {
+    let sortedArray: UserFindResponse[] = [];
+
+    const arrayUser = array.filter((element) => element._id === this.user?.id);
+
+    const arrayWithOutUser = array.filter(
+      (element) => element._id !== this.user?.id
+    );
+
+    const onlineUsers = arrayWithOutUser
+      .filter((element) => element.status === UserStatus.online)
+      .sort(this.sortByName);
+
+    const oflineUsers = arrayWithOutUser
+      .filter((element) => element.status === UserStatus.offline)
+      .sort(this.sortByName);
+
+    return (sortedArray = [...arrayUser, ...onlineUsers, ...oflineUsers]);
   }
 }
