@@ -131,7 +131,7 @@ export class AuthService {
   shopPopupInfo(message: string, email = "", additionalInfo = true) {
     this.dialog.open(LoginpopupComponent, {
       minHeight: "20vh",
-      maxHeight: "100vh",
+      minWidth: "300px",
       data: {
         message: message,
         email,
