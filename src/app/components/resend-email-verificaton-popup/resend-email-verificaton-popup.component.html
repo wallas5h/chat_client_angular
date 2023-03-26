@@ -1,6 +1,9 @@
-<div class="flex justify-center min-[900px]:justify-around py-10 items-center">
+<div class="flex justify-center min-[900px]:justify-around pt-5 items-center">
   <div class="">
-    <mat-card class="flex-row justify-center">
+    <mat-card
+      style="box-shadow: none;"
+      class="flex-row justify-center text-[#4d4d4d]"
+    >
       <mat-card-title class="text-center pb-5"
         >Email Confirmation</mat-card-title
       >
@@ -38,7 +41,7 @@
               class="bg-green-600 text-slate-100"
               [disabled]="!confirmationForms.valid"
             >
-              Resend e-mail confirmation
+              Resend e-mail
             </button>
           </div>
         </form>
