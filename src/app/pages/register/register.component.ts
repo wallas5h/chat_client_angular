@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   FormsModule,
@@ -10,6 +11,7 @@ import {
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "src/app/Material-Module";
 import { AuthService } from "src/app/services/auth.service";
+import { ValidationService } from "src/app/services/validation-service.service";
 
 @Component({
   selector: "app-register",
@@ -25,7 +27,10 @@ import { AuthService } from "src/app/services/auth.service";
   styles: [],
 })
 export class RegisterComponent implements OnInit {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private validationService: ValidationService
+  ) {}
 
   imageBgUrl =
     "https://images.pexels.com/photos/3178818/pexels-photo-3178818.jpeg?auto=compress&cs=tinysrgb&w=640&h=960&dpr=1";
@@ -37,15 +42,29 @@ export class RegisterComponent implements OnInit {
   uploadImage = null;
   uploadImageUrl: string | null = null;
 
-  registerForms = new FormGroup({
-    email: new FormControl(
-      "",
-      Validators.compose([Validators.email, Validators.required])
-    ),
-    username: new FormControl("", Validators.required),
-    password: new FormControl("", Validators.required),
-    confirmPassword: new FormControl("", Validators.required),
-  });
+  registerForms = new FormGroup(
+    {
+      email: new FormControl(
+        "",
+        Validators.compose([Validators.email, Validators.required])
+      ),
+      username: new FormControl("", Validators.required),
+      password: new FormControl(
+        "",
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(40),
+          Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,40}$/),
+        ])
+      ),
+      confirmPassword: new FormControl(
+        "",
+        Validators.compose([Validators.required])
+      ),
+    },
+    this.validationService.passwordMatch("password", "confirmPassword")
+  );
 
   imagePreview = this.uploadImageUrl
     ? this.uploadImageUrl
@@ -64,12 +83,27 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  get confirmPasswordControl() {
+    return this.registerForms.get("confirmPassword");
+  }
+
+  public getConfirmPasswordError() {
+    const control: AbstractControl | null = this.confirmPasswordControl;
+    return control?.hasError("required")
+      ? "Please confirm the  password"
+      : control?.hasError("passwordMismatch")
+      ? "The passwords do not match"
+      : "";
+  }
+
   checkPasswordMatch() {
     if (
       this.registerForms.value.password ===
       this.registerForms.value.confirmPassword
     ) {
       this.isPasswordMatch = true;
+    } else {
+      this.isPasswordMatch = false;
     }
   }
 

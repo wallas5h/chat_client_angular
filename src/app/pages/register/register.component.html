@@ -74,6 +74,15 @@
               *ngIf="registerForms.controls.password.touched && registerForms.controls.password.hasError('required')"
               >Password is required</mat-error
             >
+            <mat-error
+              *ngIf="registerForms.controls.password.hasError('minLength')"
+              >Password should have minimum 8 characters</mat-error
+            >
+            <mat-error
+              *ngIf=" registerForms.controls.password.hasError('pattern')"
+              >Password should have 8-40 characters, at least 1 uppercase
+              letter, 1 lowercase letter and 1 number</mat-error
+            >
           </mat-form-field>
           <mat-form-field class="example-full-width w-full" appearance="fill">
             <mat-label>Confirm password</mat-label>
@@ -87,6 +96,11 @@
             <mat-error
               *ngIf="registerForms.controls.confirmPassword.touched && registerForms.controls.confirmPassword.hasError('required')"
               >Please confirm password.</mat-error
+            >
+
+            <mat-error
+              *ngIf="registerForms.controls.confirmPassword.touched &&confirmPasswordControl?.invalid"
+              >Passwords do not match.</mat-error
             >
           </mat-form-field>
           <div class="flex justify-evenly">
