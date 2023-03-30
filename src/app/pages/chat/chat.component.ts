@@ -51,6 +51,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.authService.checkUserOnlineStatus();
+    this.authService.sendUserOfflineStatusOnCloseTab();
     this.authService.getUserNewMessages();
   }
 
