@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
@@ -51,7 +52,7 @@ import { FilterUserFormComponent } from "./search-user-form/filter-user-form.com
   templateUrl: "./sidebar.component.html",
   styles: [],
 })
-export class SidebarComponent implements OnInit, OnChanges {
+export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
   @Output() passRoomDetails = new EventEmitter<roomResponseDto>();
   rooms: roomResponseDto[] | [] = [];
   respData: any;
@@ -65,6 +66,7 @@ export class SidebarComponent implements OnInit, OnChanges {
 
   filterSearchActive: boolean = false;
   filterUserSearchResult: any;
+  intervalId: any;
 
   roomForm = new FormGroup({
     newRoom: new FormControl("", Validators.required),
@@ -86,9 +88,12 @@ export class SidebarComponent implements OnInit, OnChanges {
     private _snackBar: MatSnackBar,
     public filterForm: FilterUserFormComponent
   ) {}
+  ngOnDestroy(): void {
+    clearInterval(this.intervalId);
+  }
   ngOnChanges(changes: SimpleChanges): void {
     this.newMessages = this.socketioService.newMessages;
-    this.setMembersData();
+    // this.setMembersData();
   }
 
   async ngOnInit(): Promise<void> {
@@ -97,6 +102,12 @@ export class SidebarComponent implements OnInit, OnChanges {
     this.socketioService.getNumberOfNewMessages();
     this.socketioService.setNumberOfNewMessages();
     this.newMessages = this.socketioService.newMessages;
+  }
+
+  ngAfterViewInit(): void {
+    this.intervalId = setInterval(() => {
+      this.setMembersData();
+    }, 5000);
   }
 
   setMembersData() {
