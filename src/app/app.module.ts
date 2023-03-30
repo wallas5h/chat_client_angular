@@ -17,6 +17,7 @@ import { ChatService } from "./services/chat.service";
 import { SocketioService } from "./services/socketio.service";
 import { TokenInterceptorService } from "./services/token-interceptor.service";
 import { UploadService } from "./services/upload.service";
+import { ValidationService } from "./services/validation-service.service";
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { UploadService } from "./services/upload.service";
     SocketioService,
     UploadService,
     FilterUserFormComponent,
+    ValidationService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,
