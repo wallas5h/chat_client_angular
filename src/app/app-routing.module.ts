@@ -36,11 +36,11 @@ const routes: Routes = [
         (opt) => opt.RegisterComponent
       ),
   },
-  // {
-  //   path: "**",
-  //   redirectTo: "login",
-  //   pathMatch: "full",
-  // },
+  {
+    path: "**",
+    redirectTo: "",
+    pathMatch: "full",
+  },
 ];
 
 @NgModule({
