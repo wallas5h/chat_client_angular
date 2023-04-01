@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
+import { apiSocketUrl } from "config/api";
 import { io } from "socket.io-client";
-import { apiSocketUrl } from "src/config/api";
 
 export const socket = io(apiSocketUrl);
 // export const socket = io(apiSocketUrl, {

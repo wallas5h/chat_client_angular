@@ -5,7 +5,8 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import axios from "axios";
-import { apiUrl } from "src/config/api";
+import { apiUrl } from "config/api";
+
 import { LoginpopupComponent } from "../components/loginpopup/loginpopup.component";
 import {
   authEndpoints,

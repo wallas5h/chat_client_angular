@@ -1,7 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import axios from "axios";
-import { apiUrl } from "src/config/api";
+import { apiUrl } from "config/api";
+
 import { roomResponseDto } from "../types/room.dto";
 import { AuthService } from "./auth.service";
 import { SocketioService } from "./socketio.service";
