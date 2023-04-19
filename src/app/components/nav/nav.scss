@@ -1,0 +1,35 @@
+@import "../../../variables";
+
+
+.message-badge-info {
+  display: inline-block;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: $orange;
+  font-size: 12px;
+  font-weight: 600;
+  color: lighten($color: $gray, $amount: 15%);
+  text-align: center;
+  line-height: 20px;
+}
+
+.message-badge-info.hidden {
+  display: none;
+}
+
+.chat-link {
+  padding: 1rem;
+  color: #fff;
+  margin-right: 1rem;
+  cursor: pointer;
+
+  &:hover .chat-link--text {
+    color: $orange;
+  }
+
+  &--text {
+    padding-right: 0.5rem;
+    font-weight: 600;
+  }
+}

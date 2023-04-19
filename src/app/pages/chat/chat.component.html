@@ -1,0 +1,33 @@
+<div class="chat--wrapper">
+  <div
+    class="sidebar--wrapper"
+    [ngClass]="{'sidebar--wrapper-visible': !hiddenSidebar}"
+  >
+    <div
+      class="blur-background"
+      [ngClass]="{'blur-background-visible': !hiddenSidebar}"
+    ></div>
+    <app-sidebar (passRoomDetails)="onPassRoomDetails($event)"></app-sidebar>
+    <div
+      class="sidebar--arrow"
+      [ngClass]="{'sidebar--arrow-bgc': !hiddenSidebar}"
+      (click)="onClickArrow()"
+    >
+      <i
+        class="fa-solid"
+        [ngClass]="{' fa-caret-right': hiddenSidebar, ' fa-regular fa-xmark': !hiddenSidebar}"
+      ></i>
+    </div>
+    <span class="sidebar--arrow--hover-text">
+      <i *ngIf="hiddenSidebar">Show Rooms</i>
+      <!-- <i *ngIf="!hiddenSidebar">Hide Rooms</i> -->
+    </span>
+  </div>
+
+  <div class="messages--form--wrapper">
+    <app-message-form
+      [room]="currentRoom"
+      [privMsgMember]="messageMember"
+    ></app-message-form>
+  </div>
+</div>

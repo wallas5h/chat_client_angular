@@ -1,0 +1,33 @@
+<div>
+  <div class="flex items-center content-center w-full">
+    <h4 class="font-[800] capitalize">Room's name: {{room.name }}</h4>
+  </div>
+  <div class="my-4">
+    Created by: {{room.createdBy.name | titlecase}}
+  </div>
+
+  <div class="my-4">
+    Room type: {{data.room.type | titlecase}}
+  </div>
+
+  <div class="my-4">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header class="bg-slate-300">
+        <mat-panel-title>
+          User's list:
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="overflow-y-scroll h-max-[10vh]">
+        <div *ngFor="let member of members">
+          <div class="flex items-center justify-between mr-3">
+            <p>
+              {{member.name | titlecase}}
+              <ng-container *ngIf="member.id==user?.id">(You)</ng-container>
+            </p>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </div>
+</div>

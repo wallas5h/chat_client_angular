@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: url(./assets/banner-bg.jpg);
+
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

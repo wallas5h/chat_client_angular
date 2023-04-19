@@ -1,0 +1,258 @@
+<div class="flex justify-center items-center relative h-[48px] bg-[#ffa500]">
+  <span
+    class="top-0 sticky my-2 italic flex justify-center items-center"
+    *ngIf="room._id"
+  >
+    Chat room:
+    <span
+      class="inline-block italic font-semibold px-1 mx-1 max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap"
+    >
+      {{room.name | titlecase }}
+    </span>
+  </span>
+  <span class="flex items-center sticky italic" *ngIf="privMsgMember._id">
+    Your conversation with:
+    <span
+      class="italic font-semibold px-1 mx-1 block max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap"
+    >
+      {{privMsgMember.name | titlecase}}
+    </span>
+    <img
+      src="{{privMsgMember.image? privMsgMember.image: defaultUserImage}}"
+      (error)="onImgError($event)"
+      alt="{{privMsgMember.name}}"
+      class="w-[40px] h-[40px] object-cover mx-auto my-1 rounded-full ml-2"
+    />
+  </span>
+</div>
+<div
+  class="h-[70vh] border-2 border-slate-300 rounded-xl overflow-x-hidden overflow-y-scroll mb-[20px] bg-[#fff] bg-opacity-30"
+>
+  <ng-container *ngIf="!currentRoomId">
+    <div class="fa-message-wrapper">
+      <span class="fa-message-icon">
+        <i class="fa-regular fa-comment-dots"></i>
+      </span>
+      <p class="fa-message-text">
+        Select a Conversation
+      </p>
+    </div>
+  </ng-container>
+  <div *ngIf="currentRoomId" class="h-max-[60vh]">
+    <ng-container *ngFor="let message of messages">
+      <div class="flex w-full justify-center items-center my-2">
+        <p
+          class="flex justify-center items-center py-1 px-4 rounded-lg bg-[#c3c3c3]"
+        >
+          {{message._id}}
+        </p>
+      </div>
+      <ng-container *ngFor="let item of message.messagesByDate">
+        <div
+          class="messageByDate-wrapper"
+          [ngClass]="{ 'messageByDate-wrapper-user': item.from.id===user?.id }"
+        >
+          <ng-container *ngIf=" item.from.id===user?.id">
+            <div class="messageByDate-user-settings">
+              <button
+                [matMenuTriggerFor]="settings"
+                matTooltip="more"
+                matTooltipPosition="right"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+
+              <mat-menu #settings="matMenu">
+                <button (click)="deleteMessage(item._id)" mat-menu-item>
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </mat-menu>
+            </div>
+          </ng-container>
+
+          <div class="flex flex-wrap items-center p-[5px] max-w-[60%] rounded">
+            <ng-container *ngIf="item.from.id!==user?.id">
+              <img
+                src="{{item.from.image ? item.from.image: defaultUserImage}}"
+                alt="{{item.from.name}}"
+                (error)="onImgError($event)"
+                class="w-[35px] h-[35px] object-cover rounded-full mr-[10px]"
+              />
+            </ng-container>
+
+            <div
+              class="flex flex-wrap items-center min-w-[60px] break-all px-3 py-1 rounded-lg"
+              [ngClass]="{ 'ml-auto bg-[#BFDBFE]': item.from.id===user?.id , 
+              'bg-[#e6e3d8]': item.from.id!==user?.id,
+            'bg-transparent':['emoji','image','video'].includes(item.contentType)
+        
+            }"
+            >
+              <ng-container *ngIf="item.contentType==='text'">
+                {{item.content}}
+              </ng-container>
+              <ng-container *ngIf="item.contentType==='image'">
+                <img
+                  class="max-w-[150px] cursor-pointer tablet:max-w-[200px] laptop:max-w-[300px]"
+                  src="{{item.content}}"
+                  alt="image"
+                  (click)="handleOpenMediaPopup(item.content, item.contentType)"
+                />
+              </ng-container>
+              <ng-container *ngIf="item.contentType==='emoji'">
+                <span class="block h-min-[50px] text-[40px]"
+                  >{{item.content}}</span
+                >
+              </ng-container>
+              <ng-container *ngIf="item.contentType==='video'">
+                <video
+                  class="max-w-[200px] tablet:max-w-[250px] laptop:max-w-[350px] cursor-pointer"
+                  controls
+                  (click)="handleOpenMediaPopup(item.content, item.contentType)"
+                >
+                  <source src="{{item.content}}" type="video/mp4" />
+                </video>
+              </ng-container>
+              <ng-container *ngIf="item.contentType==='raw'">
+                <div>
+                  <mat-icon>attachment</mat-icon>
+                  <a
+                    class="font-semibold"
+                    href="{{item.content.split(' | ')[0]}}"
+                    target="_blank"
+                    >{{item.content.split(' | ')[1]}}</a
+                  >
+                  <div>
+                    <span class="text-xs"
+                      >{{transformBytesToMB(item.content.split(' | ')[2])}}
+                      MB</span
+                    >
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <div
+              class="flex justify-end basis-[50%] ml-auto text-xs mt-1"
+              [ngClass]="{ 'mx-auto': item.from.id!==user?.id,'hidden':item.contentType.includes('emoji') }"
+            >
+              {{item.time}}
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isFileLoaded">
+      <div class="flex items-center w-[200px] h-[200px] ml-auto bg-blue-200">
+        <mat-spinner></mat-spinner>
+      </div>
+    </ng-container>
+    <p style="color: transparent;" id="point" *ngIf="messages.length">.</p>
+  </div>
+</div>
+
+<div>
+  <form
+    class="flex justify-evenly items-center"
+    [formGroup]="messageForm"
+    (ngSubmit)="sendMessage()"
+    *ngIf="currentRoomId"
+  >
+    <div
+      class="caret-icon"
+      [ngClass]="{'caret-icon-visible': !showUploadIcons}"
+    >
+      <i class="fa-solid fa-angle-right"></i>
+    </div>
+
+    <div
+      class="upload-icons-wrapper"
+      [ngClass]="{'upload-icons-wrapper-visible': showUploadIcons}"
+    >
+      <!-- upload file -->
+      <!-- <div ng-disabled="isFileLoaded">
+        <label (click)="uploadRawFile.click()" class="cursor-pointer">
+          <mat-icon> attach_file</mat-icon>
+        </label>
+        <input
+          className="p-2 rounded w-full border"
+          type="file"
+          id="raw-upload"
+          name="raw"
+          #uploadRawFile
+          hidden
+          accept=".pdf, text/plain, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+          (change)="cloudUploadRawFile($event)"
+        />
+      </div> -->
+      <div ng-disabled="isFileLoaded">
+        <label (click)="uploadImage.click()" class="cursor-pointer">
+          <i class="fa-regular fa-image"></i>
+        </label>
+        <input
+          className="p-2 rounded w-full border"
+          type="file"
+          id="image-upload"
+          name="image"
+          #uploadImage
+          hidden
+          accept="image/png, image/jpeg"
+          (change)="cloudUploadImage($event)"
+        />
+      </div>
+      <div ng-disabled="isFileLoaded">
+        <label (click)="uploadVideo.click()" class="cursor-pointer">
+          <i class="fa-solid fa-film"></i>
+        </label>
+        <input
+          className="p-2 rounded w-full border"
+          type="file"
+          id="video-upload"
+          name="video"
+          #uploadVideo
+          hidden
+          accept="video/mp4,video/x-m4v,video/*"
+          (change)="cloudUploadVideo($event)"
+        />
+      </div>
+    </div>
+    <div
+      class="form-input-wrapper"
+      [ngClass]="{'form-input-wrapper--wide': !showUploadIcons}"
+    >
+      <input
+        class="form-input"
+        type="text"
+        placeholder="Your message"
+        formControlName="newMessage"
+        id="inputText"
+        [value]="messageForm.value.newMessage"
+        (focus)="changeVisibilityUploadIcons()"
+        (blur)="changeVisibilityUploadIcons()"
+      />
+      <p class="emoji-icon" (click)="changeVisibilityEmojiIcons()">
+        <i class="fa-sharp fa-solid fa-face-smile"></i>
+      </p>
+
+      <div
+        class="emoji-popup"
+        [ngClass]="{'emoji-popup-visible': showEmojicons}"
+      >
+        <ng-container *ngFor="let icon of emojiIcons">
+          <span class="icon" (click)="handleClickEmojiIcon(icon)"
+            >{{icon}}</span
+          >
+        </ng-container>
+      </div>
+    </div>
+
+    <button class="btn-send-msg" type="submit" [disabled]="!messageForm.valid">
+      <span class="btn-send-desktop">
+        Send
+      </span>
+      <span class="btn-send-mobile">
+        <mat-icon>send</mat-icon>
+      </span>
+    </button>
+  </form>
+</div>

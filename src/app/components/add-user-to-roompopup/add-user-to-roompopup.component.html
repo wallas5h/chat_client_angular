@@ -1,0 +1,81 @@
+<div *ngIf="user?.id==data.room.createdBy.id">
+  <div class="flex items-center content-center w-full">
+    <h4
+      class="inline-block font-[800] capitalize max-w-[250px] overflow-hidden text-ellipsis whitespace-nowrap"
+    >
+      Room's name: {{room.name }}
+    </h4>
+  </div>
+  <div
+    class="inline-block my-4 max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap"
+  >
+    Created by: {{room.createdBy.name | titlecase}}
+  </div>
+
+  <div class="my-4">
+    Room type: {{data.room.type | titlecase}}
+  </div>
+
+  <div class="mt-6">
+    <form [formGroup]="addUserForm" (ngSubmit)="findUser()">
+      <label class="">
+        Add user:
+      </label>
+
+      <input
+        class="w-full py-3 px-2 my-2 bg-slate-100"
+        type="text"
+        placeholder="Enter name"
+        formControlName="username"
+      />
+      <button
+        type="submit"
+        mat-button
+        color="primary"
+        mat-raised-button
+        [disabled]="!addUserForm.valid"
+        class="w-full"
+      >
+        Search
+      </button>
+    </form>
+  </div>
+  <ng-container *ngIf="!findUserFailed">
+    <div class="w-full my-4" *ngIf="findUserFailed===false ">
+      Search results:
+    </div>
+
+    <div class="overflow-y-scroll h-max-[10vh]">
+      <div *ngFor="let user of findUserRes">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <img
+              class="w-[20px] rounded-full mr-2"
+              src="{{user.image}}"
+              alt="{{user.name}}"
+            />
+            <p
+              class="flex items-center max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap"
+            >
+              {{user.name}}
+            </p>
+          </div>
+          <button
+            (click)="addUserToRoom(user._id, user.name)"
+            class="mr-2 flex items-center"
+          >
+            <mat-icon>add_circle_outline</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container
+    *ngIf="findUserFailed===true && !(addUserForm.value?.username?.length === undefined)"
+  >
+    <div class="my-4">
+      <p class="w-full">Search results:</p>
+      <p>No results, enter another name</p>
+    </div>
+  </ng-container>
+</div>

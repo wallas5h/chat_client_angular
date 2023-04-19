@@ -1,0 +1,67 @@
+<div
+  class="flex items-center justify-between w-screen bg-[#333] px-4 font-semibold"
+>
+  <a
+    href="/"
+    [routerLink]="['/']"
+    class="p-4 text-white text-[1.2rem] tracking-wide"
+  >
+    <span class="text-[#ffa500]">C</span>hat<span class="text-[#ffa500]">M</span
+    >e</a
+  >
+  <!-- <span class="cursor-pointer py-4 px-4" [routerLink]="['/']">ChatMe</span> -->
+  <span class="example-spacer"></span>
+
+  <div class="flex row-auto items-center justify-between">
+    <ng-container *ngIf="isAuthenticated">
+      <div class="chat-link" [routerLink]="['../chat']">
+        <span class="chat-link--text" (click)="checkUserOnlineStatus()"
+          >Chat
+        </span>
+        <span
+          class="message-badge-info"
+          [ngClass]="{'hidden': !this.socketService.sumOfNewMessages}"
+        >
+          {{this.socketService.sumOfNewMessages}}
+        </span>
+      </div>
+
+      <div class="flex items-center cursor-pointer" [matMenuTriggerFor]="menu">
+        <img
+          src="{{user?.image ?  user?.image: defaultUserImage}}"
+          alt="{{user?.name}}"
+          (error)="onImgError($event)"
+          class="w-[20px] h-[20px] rounded-full mr-4 my-auto"
+        />
+        <span
+          class="flex my-auto px-1 text-slate-100 max-w-[80px] overflow-hidden text-ellipsis whitespace-nowrap font-semibold"
+          >{{user?.name | titlecase}}</span
+        >
+        <button mat-button>
+          <mat-icon [ngStyle]="{'color':'#fff'}">expand_more</mat-icon>
+        </button>
+      </div>
+      <mat-menu #menu="matMenu">
+        <!-- <button mat-menu-item [routerLink]="['../chat']">Chat</button> -->
+        <button mat-menu-item (click)="logout()">Logout</button>
+      </mat-menu>
+    </ng-container>
+
+    <ng-container *ngIf="!isAuthenticated" class="mr-6">
+      <button
+        mat-button
+        [matMenuTriggerFor]="menu"
+        class="flex items-center justify-center"
+        [ngStyle]="{'margin-right': '20px'}"
+      >
+        <i
+          class="fa-solid fa-bars inline-block select-none text-white text-[30px]"
+        ></i>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item [routerLink]="['../register']">Sign up</button>
+        <button mat-menu-item [routerLink]="['../login']">Login</button>
+      </mat-menu>
+    </ng-container>
+  </div>
+</div>

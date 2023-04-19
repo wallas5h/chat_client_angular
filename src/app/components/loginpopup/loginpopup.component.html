@@ -1,0 +1,40 @@
+<div class="phone: w-max-[100vw] md: w-max-[80vw] laptop: w-max-[50vw]">
+  <div
+    class="flex justify-center w-full py-2 px-3 mb-2 text-[#4d4d4d] text-lg font-semibold"
+  >
+    Alert
+  </div>
+  <div class="mb-4">
+    <p
+      class="flex justify-center w-[100%] text-center text-[#4d4d4d] font-semibold"
+    >
+      {{data.message}}
+    </p>
+    <p
+      *ngIf="data.additionalInfo"
+      class="flex justify-center w-[100%] text-center text-xs text-sky-700"
+    >
+      If You didn't find email, please check spam or click button below, we will
+      send link again.
+    </p>
+  </div>
+  <div class="flex justify-between phone:justify-evenly flex-wrap mt-4">
+    <button
+      style="margin-top: 10px;"
+      mat-raised-button
+      class="bg-green-500 text-white"
+      (click)="resendEmailConfirmation()"
+      *ngIf="data.additionalInfo"
+    >
+      Resend e-mail confirmation
+    </button>
+    <button
+      style="margin-top: 10px;"
+      mat-raised-button
+      class="block bg-blue-500 text-slate-100 hover:shadow-lg shadow-cyan-500/50 md::mt-0"
+      mat-dialog-close
+    >
+      Close
+    </button>
+  </div>
+</div>

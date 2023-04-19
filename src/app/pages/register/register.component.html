@@ -1,0 +1,130 @@
+<div class="flex justify-center min-[900px]:justify-around py-10 items-center">
+  <div>
+    <mat-card class="flex-row justify-center shadow-none">
+      <mat-card-title class="text-center pb-5">Register</mat-card-title>
+
+      <mat-card-content class="ml-auto">
+        <form
+          class="example-form w-80 m-auto"
+          [formGroup]="registerForms"
+          (ngSubmit)="createUser()"
+        >
+          <div class="mb-4">
+            <img
+              [src]="imagePreview"
+              alt=""
+              class="w-[100px] h-[100px] rounded-full m-auto cursor-pointer"
+              (click)="uploadImage.click()"
+            />
+
+            <input
+              className="p-2 rounded w-full border"
+              type="file"
+              id="image-upload"
+              name="image"
+              #uploadImage
+              hidden
+              accept="image/png, image/jpeg"
+              (change)="validateImg($event)"
+            />
+          </div>
+
+          <mat-form-field class="example-full-width w-full" appearance="fill">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              placeholder="Email"
+              type="email"
+              name="email"
+              formControlName="email"
+            />
+            <mat-error
+              *ngIf="registerForms.controls.email.touched && registerForms.controls.email.hasError('required')"
+              >Email is required</mat-error
+            >
+            <mat-error
+              *ngIf="registerForms.controls.email.touched && registerForms.controls.email.hasError('email')"
+              >Email must be valid</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field class="example-full-width w-full" appearance="fill">
+            <mat-label>Username</mat-label>
+            <input
+              matInput
+              placeholder="Username"
+              type="text"
+              name="username"
+              formControlName="username"
+            />
+            <mat-error
+              *ngIf="registerForms.controls.username.touched && registerForms.controls.username.hasError('required')"
+              >Username is required</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field class="example-full-width w-full" appearance="fill">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              placeholder="Password"
+              type="password"
+              name="password"
+              formControlName="password"
+            />
+            <mat-error
+              *ngIf="registerForms.controls.password.touched && registerForms.controls.password.hasError('required')"
+              >Password is required</mat-error
+            >
+            <mat-error
+              *ngIf="registerForms.controls.password.hasError('minLength')"
+              >Password should have minimum 8 characters</mat-error
+            >
+            <mat-error
+              *ngIf=" registerForms.controls.password.hasError('pattern')"
+              >Password should have 8-40 characters, at least 1 uppercase
+              letter, 1 lowercase letter and 1 number</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field class="example-full-width w-full" appearance="fill">
+            <mat-label>Confirm password</mat-label>
+            <input
+              matInput
+              placeholder="Confirm password"
+              type="password"
+              name="confirmPassword"
+              formControlName="confirmPassword"
+            />
+            <mat-error
+              *ngIf="registerForms.controls.confirmPassword.touched && registerForms.controls.confirmPassword.hasError('required')"
+              >Please confirm password.</mat-error
+            >
+
+            <mat-error
+              *ngIf="registerForms.controls.confirmPassword.touched &&confirmPasswordControl?.invalid"
+              >Passwords do not match.</mat-error
+            >
+          </mat-form-field>
+          <div class="flex justify-evenly">
+            <button
+              mat-raised-button
+              type="submit"
+              class="bg-green-600 text-slate-100"
+              [disabled]="!registerForms.valid"
+            >
+              Register
+            </button>
+            <button
+              mat-raised-button
+              class="bg-blue-500 text-slate-100 hover:shadow-lg shadow-cyan-500/50"
+              [routerLink]="['/login']"
+            >
+              Go to Login
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="">
+    <img [src]="imageBgUrl" alt="" class="h-[0vh] min-[900px]:h-[80vh]" />
+  </div>
+</div>
